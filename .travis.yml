@@ -9,6 +9,7 @@ env:
 
 r_packages:
   - covr
+  - rJava
 
 after_success:
   - Rscript -e 'covr::codecov()'
