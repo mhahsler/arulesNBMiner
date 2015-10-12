@@ -1,0 +1,15 @@
+import("methods")
+import("arules")
+import("rJava")
+importFrom(stats, chisq.test, pchisq, dnbinom)
+importFrom(graphics, lines, legend)
+
+export(
+        "NBMinerParameters", 
+        "NBMiner"
+      )
+
+exportClasses(
+        "NBMinerParameter",
+        "NBMinerControl"
+        )

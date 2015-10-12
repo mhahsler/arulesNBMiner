@@ -1,0 +1,17 @@
+Package: arulesNBMiner
+Version: 0.1-5
+Date: 2015-07-02
+Title: Mining NB-Frequent Itemsets and NB-Precise Rules
+Author: Michael Hahsler
+Maintainer: Michael Hahsler <mhahsler@lyle.smu.edu>
+Description: NBMiner is an implementation of the model-based mining algorithm 
+    for mining NB-frequent itemsets presented in "Michael Hahsler. A
+    model-based frequency constraint for mining associations from
+    transaction data. Data Mining and Knowledge Discovery, 13(2):137-166,
+    September 2006." In addition an extension for NB-precise rules is 
+    implemented. 
+Depends: R (>= 2.10), arules (>= 0.6-6), rJava (>= 0.6-3)
+URL: http://R-Forge.R-project.org/projects/arules/, http://lyle.smu.edu/IDA/arules/
+Imports: methods, stats, graphics
+SystemRequirements: Java (>= 5.0)
+License: GPL-2
