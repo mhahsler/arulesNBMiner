@@ -3,13 +3,15 @@ language: r
 sudo: required
 warnings_are_errors: false
 
+apt_packages:
+  - r-cran-java
+
 env:
   global:
     - CRAN: http://cran.rstudio.com
 
 r_packages:
   - covr
-  - rJava
 
 after_success:
   - Rscript -e 'covr::codecov()'
