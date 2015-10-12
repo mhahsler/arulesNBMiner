@@ -4,7 +4,7 @@ sudo: required
 warnings_are_errors: false
 
 apt_packages:
-  - r-cran-java
+  - r-cran-rjava
 
 env:
   global:
