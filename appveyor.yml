@@ -11,6 +11,10 @@ install:
 
 # Adapt as necessary starting from here
 
+on_failure:
+  - 7z a logs.zip *.Rcheck
+  - appveyor PushArtifact logs.zip
+
 build_script:
   - travis-tool.sh install_deps
 
