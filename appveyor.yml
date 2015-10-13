@@ -11,6 +11,9 @@ install:
 
 # Adapt as necessary starting from here
 
+on_failure:
+- appveyor PushArtifact *.Rcheck
+
 build_script:
   - travis-tool.sh install_deps
 
