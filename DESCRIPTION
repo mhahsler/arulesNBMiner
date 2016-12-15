@@ -11,7 +11,8 @@ Description: NBMiner is an implementation of the model-based mining algorithm
     September 2006." In addition an extension for NB-precise rules is
     implemented.
 Depends: R (>= 2.10), arules (>= 0.6-6), rJava (>= 0.6-3)
-URL: http://R-Forge.R-project.org/projects/arules/, http://lyle.smu.edu/IDA/arules/
+URL: http://lyle.smu.edu/IDA/arules/
+BugReports: https://github.com/mhahsler/arulesNBMiner/issues
 Imports: methods, stats, graphics
 SystemRequirements: Java (>= 5.0)
 License: GPL-2
