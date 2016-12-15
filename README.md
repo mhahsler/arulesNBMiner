@@ -11,8 +11,7 @@ NBMiner, an implementation of the model-based mining algorithm
     for mining NB-frequent itemsets presented in ["Michael Hahsler. A
     model-based frequency constraint for mining associations from
     transaction data. Data Mining and Knowledge Discovery, 13(2):137-166,
-    September 2006."](http://dx.doi.org/10.1007/s10618-005-0026-2) In addition an extension for NB-precise rules is 
-    implemented. 
+    September 2006."](http://dx.doi.org/10.1007/s10618-005-0026-2) In addition     an extension for NB-precise rules is implemented. 
 
 ## Installation
 
@@ -42,7 +41,7 @@ iteration = 1 , zero class = 2 , k = 1.08506 , m = 278.7137
 total items =  716 
 ```
 
-Mine rules
+Mine NB-frequent itemsets
 ```R
 itemsets_NB <- NBMiner(Agrawal.db, parameter = param, 
      control = list(verb = TRUE, debug=FALSE))
