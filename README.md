@@ -8,10 +8,10 @@
 This R package 
 extends package [arules](http://mhahsler.github.io/arules/) with
 NBMiner, an implementation of the model-based mining algorithm 
-    for mining NB-frequent itemsets presented in ["Michael Hahsler. A
+    for mining NB-frequent itemsets presented in "Michael Hahsler. [A
     model-based frequency constraint for mining associations from
-    transaction data. Data Mining and Knowledge Discovery, 13(2):137-166,
-    September 2006."](http://dx.doi.org/10.1007/s10618-005-0026-2) In addition     an extension for NB-precise rules is implemented. 
+    transaction data.](http://dx.doi.org/10.1007/s10618-005-0026-2) _Data Mining and Knowledge Discovery,_ 13(2):137-166, September 2006." 
+    In addition an extension for NB-precise rules is implemented. 
 
 ## Installation
 
@@ -82,7 +82,8 @@ inspect(head(itemsets_NB))
     model-based frequency constraint for mining associations from
     transaction data.](http://dx.doi.org/10.1007/s10618-005-0026-2)
      _Data Mining and Knowledge Discovery,_ 13(2):137-166,
-    September 2006.
+    September 2006. 
+    [Free preprint](http://michael.hahsler.net/research/nbd_dami2005/nbd_associationrules_dami2005.pdf)
 * Michael Hahsler, Sudheer Chelluboina, Kurt Hornik, and Christian Buchta. [The arules R-package ecosystem: Analyzing interesting patterns from large transaction datasets.](http://jmlr.csail.mit.edu/papers/v12/hahsler11a.html) _Journal of Machine Learning Research,_ 12:1977-1981, 2011.
 * [Reference manual](http://cran.r-project.org/web/packages/arulesNBMiner/arulesNBMiner.pdf)
 
