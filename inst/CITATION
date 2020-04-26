@@ -1,0 +1,18 @@
+citation(auto = meta)
+
+bibentry(bibtype = "article",
+  title = "A Model-Based Frequency Constraint for Mining Associations from Transaction Data",
+  author = {
+    c(person("Michael", "Hahsler",
+      email = "mhahsler@lyle.smu.edu"))
+  },
+  year = 2006,
+  journal = "Data Mining and Knowledge Discovery",
+  volume = 13,
+  number = 2,
+  pages = "137--166",
+  doi = "10.1007/s10618-005-0026-2",
+  month = "September",
+  issn = "1384-5810"
+  )
+

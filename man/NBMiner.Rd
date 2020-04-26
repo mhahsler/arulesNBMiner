@@ -31,7 +31,7 @@ NBMiner(data, parameter, control = NULL)
 \references{ 
 Michael Hahsler. A model-based frequency constraint for mining
 associations from transaction data. \emph{Data Mining and Knowledge Discovery,
-13(2):137-166,} September 2006.    
+13(2):137-166,} September 2006. \doi{10.1007/s10618-005-0026-2} 
 }
 \seealso{\code{\link{NBMinerParameters}}, 
     \code{\link[arules]{transactions-class}},

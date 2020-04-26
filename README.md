@@ -1,12 +1,12 @@
 # arulesNBMiner - Mining NB-Frequent Itemsets and NB-Precise Rules - R package
 
-[![CRAN version](http://www.r-pkg.org/badges/version/arulesNBMiner)](http://cran.r-project.org/web/packages/arulesNBMiner/index.html)
-[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/arulesNBMiner)](http://cran.r-project.org/web/packages/arulesNBMiner/index.html)
+[![CRAN version](https://www.r-pkg.org/badges/version/arulesNBMiner)](https://CRAN.R-project.org/package=arulesNBMiner) 
+[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/arulesNBMiner)](https://CRAN.R-project.org/package=arulesNBMiner)
 [![Travis-CI Build Status](https://travis-ci.org/mhahsler/arulesNBMiner.svg?branch=master)](https://travis-ci.org/mhahsler/arulesNBMiner)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/mhahsler/arulesNBMiner?branch=master&svg=true)](https://ci.appveyor.com/project/mhahsler/arulesNBMiner)
 
 This R package 
-extends package [arules](http://mhahsler.github.io/arules/) with
+extends package [arules](https://github.com/mhahsler/arules) with
 NBMiner, an implementation of the model-based mining algorithm 
     for mining NB-frequent itemsets presented in "Michael Hahsler. [A
     model-based frequency constraint for mining associations from
@@ -85,5 +85,4 @@ inspect(head(itemsets_NB))
     September 2006. 
     [Free preprint](http://michael.hahsler.net/research/nbd_dami2005/nbd_associationrules_dami2005.pdf)
 * Michael Hahsler, Sudheer Chelluboina, Kurt Hornik, and Christian Buchta. [The arules R-package ecosystem: Analyzing interesting patterns from large transaction datasets.](http://jmlr.csail.mit.edu/papers/v12/hahsler11a.html) _Journal of Machine Learning Research,_ 12:1977-1981, 2011.
-* [Reference manual](http://cran.r-project.org/web/packages/arulesNBMiner/arulesNBMiner.pdf)
 
