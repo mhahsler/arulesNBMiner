@@ -4,7 +4,7 @@ Date: 2021-09-07
 Title: Mining NB-Frequent Itemsets and NB-Precise Rules
 Authors@R: c(person("Michael", "Hahsler", role = c("aut", "cre", "cph"),
                 email = "mhahsler@lyle.smu.edu",
-		comment = c(ORCID = "0000-0003-2716-1405"))
+		comment = c(ORCID = "0000-0003-2716-1405")))
 Description: NBMiner is an implementation of the model-based mining algorithm for mining NB-frequent itemsets and NB-precise rules. Michael Hahsler (2006) <doi:10.1007/s10618-005-0026-2>. 
 Depends: R (>= 3.6), arules (>= 1.6-0), rJava (>= 0.9-0)
 URL: https://github.com/mhahsler/arulesNBMiner
