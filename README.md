@@ -1,12 +1,12 @@
 
-# <img src="man/figures/logo.svg" align="right" height="139" /> R package stream - Infrastructure for Data Stream Mining
+# <img src="man/figures/logo.svg" align="right" height="139" /> R package arulesNBMiner - Mining NB-Frequent Itemsets and NB-Precise Rules
 
-[![CRAN
-version](http://www.r-pkg.org/badges/version/stream)](https://CRAN.R-project.org/package=stream)
-[![stream r-universe
-status](https://mhahsler.r-universe.dev/badges/stream)](https://mhahsler.r-universe.dev/ui#package:stream)
+[![Package on
+CRAN](https://www.r-pkg.org/badges/version/arulesNBMiner)](https://CRAN.R-project.org/package=arulesNBMiner)
 [![CRAN RStudio mirror
-downloads](http://cranlogs.r-pkg.org/badges/stream)](https://CRAN.R-project.org/package=stream)
+downloads](https://cranlogs.r-pkg.org/badges/arulesNBMiner)](https://CRAN.R-project.org/package=arulesNBMiner)
+![License](https://img.shields.io/cran/l/arulesNBMiner) [![r-universe
+status](https://mhahsler.r-universe.dev/badges/arulesNBMiner)](https://mhahsler.r-universe.dev/arulesNBMiner)
 
 This R package extends package
 [arules](https://github.com/mhahsler/arules) with NBMiner, an
@@ -14,22 +14,25 @@ implementation of the model-based mining algorithm for mining
 NB-frequent itemsets presented in “Michael Hahsler. [A model-based
 frequency constraint for mining associations from transaction
 data.](https://dx.doi.org/10.1007/s10618-005-0026-2) *Data Mining and
-Knowledge Discovery,* 13(2):137-166, September 2006.” In addition an
-extension for NB-precise rules is implemented.
+Knowledge Discovery,* 13(2):137-166, September 2006.”
+
+In addition an extension for NB-precise rules is implemented.
 
 ## Installation
 
 **Stable CRAN version:** Install from within R with
 
 ``` r
-install.packages("stream")
+install.packages("arulesNBMiner")
 ```
 
 **Current development version:** Install from
-[r-universe.](https://mhahsler.r-universe.dev/ui#package:stream)
+[r-universe.](https://mhahsler.r-universe.dev/arulesNBMiner)
 
 ``` r
-install.packages("stream", repos = "https://mhahsler.r-universe.dev")
+install.packages("arulesNBMiner",
+    repos = c("https://mhahsler.r-universe.dev",
+              "https://cloud.r-project.org/"))
 ```
 
 ## Usage
@@ -37,11 +40,11 @@ install.packages("stream", repos = "https://mhahsler.r-universe.dev")
 Estimate NBD model parameters for the Agrawal data set.
 
 ``` r
-library(arulesNBMiner)
+library("arulesNBMiner")
 data("Agrawal")
 
 param <- NBMinerParameters(Agrawal.db, pi = 0.99, theta = 0.5, maxlen = 5, minlen = 1,
-    trim = 0, verb = TRUE, plot = TRUE)
+    trim = 0, verbose = TRUE, plot = TRUE)
 ```
 
     ## using Expectation Maximization for missing zero class
@@ -83,13 +86,13 @@ inspect(head(itemsets_NB, by = "precision"))
 
 ## References
 
--   Michael Hahsler, [A model-based frequency constraint for mining
-    associations from transaction
-    data.](https://dx.doi.org/10.1007/s10618-005-0026-2) *Data Mining
-    and Knowledge Discovery,* 13(2):137-166, September 2006. [Free
-    preprint](https://michael.hahsler.net/research/nbd_dami2005/nbd_associationrules_dami2005.pdf)
--   Michael Hahsler, Sudheer Chelluboina, Kurt Hornik, and Christian
-    Buchta. [The arules R-package ecosystem: Analyzing interesting
-    patterns from large transaction
-    datasets.](https://jmlr.csail.mit.edu/papers/v12/hahsler11a.html)
-    *Journal of Machine Learning Research,* 12:1977-1981, 2011.
+- Michael Hahsler, [A model-based frequency constraint for mining
+  associations from transaction
+  data.](https://dx.doi.org/10.1007/s10618-005-0026-2) *Data Mining and
+  Knowledge Discovery,* 13(2):137-166, September 2006. [Free
+  preprint](https://michael.hahsler.net/research/nbd_dami2005/nbd_associationrules_dami2005.pdf)
+- Michael Hahsler, Sudheer Chelluboina, Kurt Hornik, and Christian
+  Buchta. [The arules R-package ecosystem: Analyzing interesting
+  patterns from large transaction
+  datasets.](https://jmlr.csail.mit.edu/papers/v12/hahsler11a.html)
+  *Journal of Machine Learning Research,* 12:1977-1981, 2011.

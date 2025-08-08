@@ -12,7 +12,7 @@ NBMinerParameters(data, trim = 0.01, pi = 0.99, theta = 0.5,
 }
 \arguments{
   \item{data}{ the data as a object of class transactions. }
-  \item{trim}{ fraction of incidences to trim off the tail of the 
+  \item{trim}{ fraction of incidences to trim off the tail of the
   frequency distribution of the data. }
   \item{pi}{ precision threshold \eqn{\pi}. }
   \item{theta}{ pruning parameter \eqn{\theta}. }
@@ -31,7 +31,7 @@ NB parameters \eqn{k} and \eqn{a}, where \eqn{a} is rescaled by dividing
 it by the number of incidences in the data (this is needed by the NBMiner).
 Also the real number of items \eqn{n} is a result of the estimation.
 
-\code{theta} and \code{pi} are just taken and added to the resulting 
+\code{theta} and \code{pi} are just taken and added to the resulting
 parameter object.
 }
 \value{
@@ -40,7 +40,7 @@ an object of class \code{NBMinerParameter} for \code{NBMiner}.
 \references{
 Michael Hahsler. A model-based frequency constraint for mining associations
 from transaction data. \emph{Data Mining and Knowledge
-Discovery,13(2):137-166,} September 2006.
+Discovery,13(2):137-166,} September 2006. \doi{10.1007/s10618-005-0026-2}
 }
 \seealso{\code{\link{NBMiner}}, \code{\link[arules]{transactions-class}}}
 \examples{
