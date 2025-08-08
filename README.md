@@ -90,7 +90,7 @@ inspect(head(itemsets_NB, by = "precision"))
   associations from transaction
   data.](https://dx.doi.org/10.1007/s10618-005-0026-2) *Data Mining and
   Knowledge Discovery,* 13(2):137-166, September 2006. [Free
-  preprint](https://michael.hahsler.net/research/nbd_dami2005/nbd_associationrules_dami2005.pdf)
+  preprint](https://doi.org/10.48550/arXiv.0803.3224)
 - Michael Hahsler, Sudheer Chelluboina, Kurt Hornik, and Christian
   Buchta. [The arules R-package ecosystem: Analyzing interesting
   patterns from large transaction

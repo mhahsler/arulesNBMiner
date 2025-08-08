@@ -1,5 +1,41 @@
-## interface
-
+#' Estimate Global Model Parameters from Data
+#'
+#' Estimate the global negative binomial data model used by the NBMiner and
+#' create an appropriate parameter object.
+#'
+#' Uses the EM algorithm to estimate the global NB model for the data. The EM
+#' algorithm is used since the zero class (items which do not occur in the
+#' dataset) is not included in the data. The result are the two NB parameters
+#' \eqn{k} and \eqn{a}, where \eqn{a} is rescaled by dividing it by the number
+#' of incidences in the data (this is needed by the NBMiner). Also the real
+#' number of items \eqn{n} is a result of the estimation.
+#'
+#' \code{theta} and \code{pi} are just taken and added to the resulting
+#' parameter object.
+#'
+#' @param data the data as a object of class [arules::transactions].
+#' @param trim fraction of incidences to trim off the tail of the frequency
+#' distribution of the data.
+#' @param pi precision threshold \eqn{\pi}.
+#' @param theta pruning parameter \eqn{\theta}.
+#' @param minlen minimum number of items in found itemsets (default: 1).
+#' @param maxlen maximal number of items in found itemsets (default: 5).
+#' @param rules mine NB-precise rules instead of NB-frequent itemsets?
+#' @param plot plot the model?
+#' @param verbose use verbose output for the estimation procedure.
+#' @param getdata get also the observed and estimated counts.
+#' @return an object of class `"NBMinerParameter"`` to be used for [NBMiner()].
+#' @references Michael Hahsler. A model-based frequency constraint for mining
+#' associations from transaction data. \emph{Data Mining and Knowledge
+#' Discovery,13(2):137-166,} September 2006.
+#' \doi{10.1007/s10618-005-0026-2}
+#' @keywords models
+#' @examples
+#' data("Epub")
+#'
+#' param <- NBMinerParameters(Epub, trim = 0.05, plot = TRUE, verbose = TRUE)
+#' param
+#'
 NBMinerParameters <- function(data,
                               trim = 0.01,
                               pi = 0.99,
@@ -251,11 +287,9 @@ NBMinerParameters <- function(data,
 
   }
 
-
   if (verb) {
     print(cbind(obs, exp = exp * n))
   }
-
 
   chitest <- chisq.test(obs, p = exp)
   chitest$prob <- pchisq(

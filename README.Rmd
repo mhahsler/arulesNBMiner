@@ -57,6 +57,6 @@ model-based frequency constraint for mining associations from
 transaction data.](https://dx.doi.org/10.1007/s10618-005-0026-2)
 _Data Mining and Knowledge Discovery,_ 13(2):137-166,
 September 2006. 
-[Free preprint](https://michael.hahsler.net/research/nbd_dami2005/nbd_associationrules_dami2005.pdf)
+[Free preprint](https://doi.org/10.48550/arXiv.0803.3224)
 * Michael Hahsler, Sudheer Chelluboina, Kurt Hornik, and Christian Buchta. [The arules R-package ecosystem: Analyzing interesting patterns from large transaction datasets.](https://jmlr.csail.mit.edu/papers/v12/hahsler11a.html) _Journal of Machine Learning Research,_ 12:1977-1981, 2011.
 
