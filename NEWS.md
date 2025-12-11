@@ -1,4 +1,4 @@
-# arulesNBMiner 0.1.9 (08/08/2025)
+# arulesNBMiner 0.1.9 (12/09/2025)
 
 ## Changes
 * We use now Roxygen.
