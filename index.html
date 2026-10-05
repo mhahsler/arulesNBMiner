@@ -11,7 +11,13 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" sizes="any" href="favicon.ico">
 <link rel="manifest" href="site.webmanifest">
-<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- mathjax math --><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script><script>
+  window.MathJax = {
+    chtml: {
+      fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
+    }
+  };
+</script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -60,8 +66,9 @@
 </h1>
 </div>
 <p><a href="https://CRAN.R-project.org/package=arulesNBMiner" class="external-link"><img src="https://www.r-pkg.org/badges/version/arulesNBMiner" alt="Package on CRAN"></a> <a href="https://CRAN.R-project.org/package=arulesNBMiner" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/arulesNBMiner" alt="CRAN RStudio mirror downloads"></a> <img src="https://img.shields.io/cran/l/arulesNBMiner" alt="License"><a href="https://mhahsler.r-universe.dev/arulesNBMiner" class="external-link"><img src="https://mhahsler.r-universe.dev/badges/arulesNBMiner" alt="r-universe status"></a></p>
-<p>This R package extends <a href="https://github.com/mhahsler/arules" class="external-link">arules</a> with NBMiner, an implementation of the model-based mining algorithm for NB-frequent itemsets described in Michael Hahsler’s paper, <a href="https://dx.doi.org/10.1007/s10618-005-0026-2" class="external-link">“A model-based frequency constraint for mining associations from transaction data.”</a> <em>Data Mining and Knowledge Discovery,</em> 13(2):137–166, September 2006.</p>
-<p>The package also supports mining NB-precise rules.</p>
+<p><strong>Maintainer:</strong> <a href="https://michael.hahsler.net" class="external-link">Michael Hahsler</a></p>
+<p>This R package extends <a href="https://github.com/mhahsler/arules" class="external-link">arules</a> with NBMiner, an implementation of the model-based mining algorithm for NB-frequent itemsets described in Michael Hahsler’s paper, <a href="https://dx.doi.org/10.1007/s10618-005-0026-2" class="external-link">“A model-based frequency constraint for mining associations from transaction data.”</a> <em>Data Mining and Knowledge Discovery,</em> 13(2):137-166, September 2006.</p>
+<p>This algorithm dynamically chooses support for itemsets based on the deviation from an independence model. The package also supports mining NB-precise rules.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -88,7 +95,7 @@
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="do">## iteration = 1 , zero class = 3 , k = 0.99 , m = 278 </span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="do">## iteration = 2 , zero class = 3 , k = 0.99 , m = 278 </span></span>
 <span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="do">## total items =  719</span></span></code></pre></div>
-<p><img src="inst/README_files/unnamed-chunk-3-1.png"><!-- --></p>
+<p><img src="reference/figures/README-NB_estimation-1.png"><!-- --></p>
 <p>Mine NB-frequent itemsets</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">itemsets_NB</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/NBMiner.html">NBMiner</a></span><span class="op">(</span><span class="va">Agrawal.db</span>, parameter <span class="op">=</span> <span class="va">param</span>, control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -116,7 +123,7 @@
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <ul>
-<li>Michael Hahsler, <a href="https://dx.doi.org/10.1007/s10618-005-0026-2" class="external-link">A model-based frequency constraint for mining associations from transaction data.</a> <em>Data Mining and Knowledge Discovery,</em> 13(2):137-166, September 2006. <a href="https://doi.org/10.48550/arXiv.0803.3224" class="external-link">Free preprint</a>
+<li>Michael Hahsler, <a href="https://dx.doi.org/10.1007/s10618-005-0026-2" class="external-link">A model-based frequency constraint for mining associations from transaction data.</a> <em>Data Mining and Knowledge Discovery,</em> 13(2):137-166, September 2006. <a href="https://doi.org/10.48550/arXiv.0803.3224" class="external-link">Preprint on ArXiv</a>
 </li>
 <li>Michael Hahsler, Sudheer Chelluboina, Kurt Hornik, and Christian Buchta. <a href="https://jmlr.csail.mit.edu/papers/v12/hahsler11a.html" class="external-link">The arules R-package ecosystem: Analyzing interesting patterns from large transaction datasets.</a> <em>Journal of Machine Learning Research,</em> 12:1977-1981, 2011.</li>
 </ul>

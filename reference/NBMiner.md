@@ -108,10 +108,10 @@ itemsets_supp <-  eclat(Agrawal.db, parameter = list(supp = 0.001))
 #> Absolute minimum support count: 20 
 #> 
 #> create itemset ... 
-#> set transactions ...[716 item(s), 20000 transaction(s)] done [0.02s].
-#> sorting and recoding items ... [656 item(s)] done [0.00s].
+#> set transactions ...[716 item(s), 20000 transaction(s)] done [0.05s].
+#> sorting and recoding items ... [656 item(s)] done [0.01s].
 #> creating sparse bit matrix ... [656 row(s), 20000 column(s)] done [0.00s].
-#> writing  ... [10873 set(s)] done [0.40s].
+#> writing  ... [10873 set(s)] done [0.49s].
 #> Creating S4 object  ... done [0.00s].
 i_supp <- itemsets_supp[size(itemsets_supp) > 1]
 i_supp <- head(sort(i_supp, by = "support"), length(i_NB))
