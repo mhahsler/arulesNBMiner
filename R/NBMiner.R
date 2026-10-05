@@ -1,8 +1,7 @@
 #' NBMiner: Mine NB-Frequent Itemsets or NB-Precise Rules
 #'
-#' Calls the Java implementation of the depth first search algorithm described
-#' in the paper in the references section to mine NB-frequent itemsets of
-#' NB-precise rules.
+#' Calls the Java implementation of the depth-first search algorithm described
+#' in the paper cited below to mine NB-frequent itemsets or NB-precise rules.
 #'
 #' The parameters can be estimated from the data using
 #' \code{NBMinerParameters}.
@@ -13,10 +12,10 @@
 #' object of class \code{NBMinerParameter}). Reasonable parameters can be
 #' obtained using [NBMinerParameters()] (see details section).
 #' @param control a list of control options (automatically converted into an
-#' object of class \code{NBMinerControl}). Currently only \code{"verbose"} and
+#' object of class \code{NBMinerControl}). Currently only `verbose` and
 #' \code{"debug"} (both logical) are available.
-#' @return An object of class [arules::itemsets] or [arules::rules] (depending on the rules entry
-#' in parameter). The estimated precision is stored in the quality slot.
+#' @return An object of class [arules::itemsets] or [arules::rules], depending
+#' on the `rules` parameter. Estimated precision is stored in the quality slot.
 #' @references Michael Hahsler. A model-based frequency constraint for mining
 #' associations from transaction data. \emph{Data Mining and Knowledge
 #' Discovery, 13(2):137-166,} September 2006.

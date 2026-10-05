@@ -1,30 +1,31 @@
 #' Estimate Global Model Parameters from Data
 #'
-#' Estimate the global negative binomial data model used by the NBMiner and
+#' Estimate the global negative binomial data model used by NBMiner and
 #' create an appropriate parameter object.
 #'
-#' Uses the EM algorithm to estimate the global NB model for the data. The EM
-#' algorithm is used since the zero class (items which do not occur in the
-#' dataset) is not included in the data. The result are the two NB parameters
-#' \eqn{k} and \eqn{a}, where \eqn{a} is rescaled by dividing it by the number
-#' of incidences in the data (this is needed by the NBMiner). Also the real
-#' number of items \eqn{n} is a result of the estimation.
+#' The EM algorithm estimates the global NB model because the zero class
+#' (items that do not occur in the dataset) is not observed. The result is the
+#' two NB parameters \eqn{k} and \eqn{a}. The value of \eqn{a} is rescaled by
+#' dividing it by the number of incidences in the data, as required by NBMiner.
+#' The estimated total number of items \eqn{n} is also returned.
 #'
-#' \code{theta} and \code{pi} are just taken and added to the resulting
+#' The supplied values of `theta` and `pi` are added to the resulting
 #' parameter object.
 #'
-#' @param data the data as a object of class [arules::transactions].
+#' @param data the data as an object of class [arules::transactions].
 #' @param trim fraction of incidences to trim off the tail of the frequency
 #' distribution of the data.
 #' @param pi precision threshold \eqn{\pi}.
 #' @param theta pruning parameter \eqn{\theta}.
 #' @param minlen minimum number of items in found itemsets (default: 1).
-#' @param maxlen maximal number of items in found itemsets (default: 5).
+#' @param maxlen maximum number of items in found itemsets (default: 5).
 #' @param rules mine NB-precise rules instead of NB-frequent itemsets?
 #' @param plot plot the model?
 #' @param verbose use verbose output for the estimation procedure.
-#' @param getdata get also the observed and estimated counts.
-#' @return an object of class `"NBMinerParameter"`` to be used for [NBMiner()].
+#' @param getdata also return the observed and estimated counts?
+#' @return An object of class `NBMinerParameter` for use with [NBMiner()]. If
+#' `getdata = TRUE`, a list containing the parameter object, observed counts,
+#' and expected counts is returned.
 #' @references Michael Hahsler. A model-based frequency constraint for mining
 #' associations from transaction data. \emph{Data Mining and Knowledge
 #' Discovery,13(2):137-166,} September 2006.
@@ -74,7 +75,7 @@ NBMinerParameters <- function(data,
       observed,
       type = "l",
       xlab = "r",
-      ylab = "n - cummulative frequency",
+      ylab = "n - cumulative frequency",
       xlim = c(0, maxx),
       ylim = c(0, max(observed, expected, na.rm = TRUE))
     )

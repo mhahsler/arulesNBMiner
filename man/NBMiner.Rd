@@ -9,24 +9,23 @@
 NBMiner(data, parameter, control = NULL)
 }
 \arguments{
-\item{data}{object of class \link[arules:transactions-class]{arules::transactions}.}
+\item{data}{object of class \link[arules:transactions]{arules::transactions}.}
 
 \item{parameter}{a list of parameters (automatically converted into an
 object of class \code{NBMinerParameter}). Reasonable parameters can be
 obtained using \code{\link[=NBMinerParameters]{NBMinerParameters()}} (see details section).}
 
 \item{control}{a list of control options (automatically converted into an
-object of class \code{NBMinerControl}). Currently only \code{"verbose"} and
+object of class \code{NBMinerControl}). Currently only \code{verbose} and
 \code{"debug"} (both logical) are available.}
 }
 \value{
-An object of class \link[arules:itemsets-class]{arules::itemsets} or \link[arules:rules-class]{arules::rules} (depending on the rules entry
-in parameter). The estimated precision is stored in the quality slot.
+An object of class \link[arules:itemsets]{arules::itemsets} or \link[arules:rules]{arules::rules}, depending
+on the \code{rules} parameter. Estimated precision is stored in the quality slot.
 }
 \description{
-Calls the Java implementation of the depth first search algorithm described
-in the paper in the references section to mine NB-frequent itemsets of
-NB-precise rules.
+Calls the Java implementation of the depth-first search algorithm described
+in the paper cited below to mine NB-frequent itemsets or NB-precise rules.
 }
 \details{
 The parameters can be estimated from the data using

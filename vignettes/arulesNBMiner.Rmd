@@ -1,0 +1,134 @@
+---
+title: "Getting started with arulesNBMiner"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with arulesNBMiner}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+`arulesNBMiner` extends the `arules` package with NBMiner, which mines
+negative-binomial (NB) frequent itemsets and NB-precise association rules.
+This vignette demonstrates the workflow with the package's bundled Agrawal
+transactions. NBMiner uses a model-based frequency constraint described by
+Hahsler (2006). A single minimum-support threshold can miss associations
+involving infrequent items and tends to favor short itemsets. The model-based
+constraint adapts its frequency threshold to each itemset extension, using an
+estimated baseline for how often independent items would co-occur.
+
+## Load the data
+
+Load the package and its example data. `Agrawal.db` is a `transactions`
+object, the input format used by `arulesNBMiner`.
+
+```{r data}
+library(arulesNBMiner)
+data("Agrawal")
+summary(Agrawal.db)
+```
+
+## Fit the baseline model
+
+The paper models each item's frequency as a Poisson count with an item
+specific rate, and models variation in those rates with a Gamma distribution.
+Mixing the Poisson counts over the Gamma rates gives a negative binomial
+distribution. This flexible baseline captures the skewed frequency
+distributions common in transaction data: a few items occur often, while many
+occur rarely.
+
+`NBMinerParameters()` estimates this global model from the item frequencies.
+Items that never occur are absent from the transactions, so the estimator
+uses an expectation-maximization procedure to estimate the unobserved zero
+frequency class. The `trim` argument can exclude the most frequent items when
+they are outliers that would distort the fit. Inspect the diagnostic plot
+before choosing a nonzero trim value.
+
+```{r parameters}
+param <- NBMinerParameters(Agrawal.db, 
+                           pi = 0.99, 
+                           theta = 0.5, 
+                           maxlen = 5, 
+                           minlen = 1,
+                           trim = 0, 
+                           verbose = TRUE, 
+                           plot = TRUE)
+
+param
+```
+
+The figure compares the observed cumulative item frequencies with frequencies
+expected under the fitted baseline. The `a` estimate is scaled per incidence
+for NBMiner, as described in the paper.
+
+
+## Mine NB-frequent itemsets
+
+For an itemset already found, NBMiner considers adding each possible item. It
+fits the baseline to the transactions containing that itemset and predicts
+how many extensions would reach each frequency by chance. The `pi` parameter
+sets the minimum predicted precision for accepting extensions. Here,
+precision means the predicted proportion of accepted extensions that are
+true associations under the model; it is not a guarantee of the actual
+precision for every data set.
+
+The `theta` parameter controls search pruning. For a larger itemset, it sets
+the required fraction of its immediate subsets that must support the itemset
+as an NB-frequent pattern. A value of 1 is most restrictive; 0 relaxes this
+condition. The intermediate value 0.5 used here balances pruning with the
+chance of retaining associations whose items have different frequencies.
+`maxlen` limits the longest itemset considered, and `minlen` can set a
+minimum length for returned patterns. The `control` list accepts `verbose`
+and `debug` logical options. 
+
+Results include model-estimated precision in
+the `precision` quality column. For comparison, we add the support measure.
+
+
+```{r itemsets}
+itemsets <- NBMiner(
+  Agrawal.db,
+  parameter = param,
+  control = list(verbose = FALSE, debug = FALSE)
+)
+
+quality(itemsets) <- cbind(quality(itemsets),
+                           support = interestMeasure(itemsets, "support", 
+                                           transactions = Agrawal.db))
+
+inspect(head(sort(itemsets, by = "support"), n = 10))
+```
+
+## Mine NB-precise rules
+
+NB-precise rules are rules created from NB-frequent itemsets. 
+Rules instead of itemsets can be mined by changing the parameter element `rules` 
+to `TRUE`.
+
+For comparison, we add the standard measures support, confidence, and lift.
+
+```{r rules}
+param@rules <- TRUE
+
+rules <- NBMiner(Agrawal.db, parameter = param)
+
+quality(rules) <- cbind(quality(rules),
+                           interestMeasure(rules, c("support", "confidence", "lift"), 
+                                           transactions = Agrawal.db))
+
+inspect(head(sort(rules, by = "precision"), n = 10))
+```
+
+The rules are very unlikely to random noise in the data.
+
+
+
+## References
+
+Hahsler, M. (2006). [A model-based frequency constraint for mining
+associations from transaction data](https://doi.org/10.1007/s10618-005-0026-2).
+*Data Mining and Knowledge Discovery*, 13(2), 137–166. [Full text on
+arXiv](https://arxiv.org/pdf/0803.3224).

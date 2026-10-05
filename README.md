@@ -8,15 +8,14 @@ downloads](https://cranlogs.r-pkg.org/badges/arulesNBMiner)](https://CRAN.R-proj
 ![License](https://img.shields.io/cran/l/arulesNBMiner) [![r-universe
 status](https://mhahsler.r-universe.dev/badges/arulesNBMiner)](https://mhahsler.r-universe.dev/arulesNBMiner)
 
-This R package extends package
-[arules](https://github.com/mhahsler/arules) with NBMiner, an
-implementation of the model-based mining algorithm for mining
-NB-frequent itemsets presented in “Michael Hahsler. [A model-based
+This R package extends [arules](https://github.com/mhahsler/arules) with
+NBMiner, an implementation of the model-based mining algorithm for
+NB-frequent itemsets described in Michael Hahsler's paper, [“A model-based
 frequency constraint for mining associations from transaction
-data.](https://dx.doi.org/10.1007/s10618-005-0026-2) *Data Mining and
-Knowledge Discovery,* 13(2):137-166, September 2006.”
+data.”](https://dx.doi.org/10.1007/s10618-005-0026-2) *Data Mining and
+Knowledge Discovery,* 13(2):137–166, September 2006.
 
-In addition an extension for NB-precise rules is implemented.
+The package also supports mining NB-precise rules.
 
 ## Installation
 
@@ -37,7 +36,8 @@ install.packages("arulesNBMiner",
 
 ## Usage
 
-Estimate NBD model parameters for the Agrawal data set.
+Estimate negative binomial distribution (NBD) model parameters for the
+Agrawal data set.
 
 ``` r
 library("arulesNBMiner")
@@ -57,7 +57,7 @@ param <- NBMinerParameters(Agrawal.db, pi = 0.99, theta = 0.5, maxlen = 5, minle
 Mine NB-frequent itemsets
 
 ``` r
-itemsets_NB <- NBMiner(Agrawal.db, parameter = param, control = list(verb = TRUE,
+itemsets_NB <- NBMiner(Agrawal.db, parameter = param, control = list(verbose = TRUE,
     debug = FALSE))
 ```
 

@@ -18,7 +18,7 @@ NBMinerParameters(
 )
 }
 \arguments{
-\item{data}{the data as a object of class \link[arules:transactions-class]{arules::transactions}.}
+\item{data}{the data as an object of class \link[arules:transactions]{arules::transactions}.}
 
 \item{trim}{fraction of incidences to trim off the tail of the frequency
 distribution of the data.}
@@ -29,7 +29,7 @@ distribution of the data.}
 
 \item{minlen}{minimum number of items in found itemsets (default: 1).}
 
-\item{maxlen}{maximal number of items in found itemsets (default: 5).}
+\item{maxlen}{maximum number of items in found itemsets (default: 5).}
 
 \item{rules}{mine NB-precise rules instead of NB-frequent itemsets?}
 
@@ -37,24 +37,25 @@ distribution of the data.}
 
 \item{verbose}{use verbose output for the estimation procedure.}
 
-\item{getdata}{get also the observed and estimated counts.}
+\item{getdata}{also return the observed and estimated counts?}
 }
 \value{
-an object of class `"NBMinerParameter"`` to be used for \code{\link[=NBMiner]{NBMiner()}}.
+An object of class \code{NBMinerParameter} for use with \code{\link[=NBMiner]{NBMiner()}}. If
+\code{getdata = TRUE}, a list containing the parameter object, observed counts,
+and expected counts is returned.
 }
 \description{
-Estimate the global negative binomial data model used by the NBMiner and
+Estimate the global negative binomial data model used by NBMiner and
 create an appropriate parameter object.
 }
 \details{
-Uses the EM algorithm to estimate the global NB model for the data. The EM
-algorithm is used since the zero class (items which do not occur in the
-dataset) is not included in the data. The result are the two NB parameters
-\eqn{k} and \eqn{a}, where \eqn{a} is rescaled by dividing it by the number
-of incidences in the data (this is needed by the NBMiner). Also the real
-number of items \eqn{n} is a result of the estimation.
+The EM algorithm estimates the global NB model because the zero class
+(items that do not occur in the dataset) is not observed. The result is the
+two NB parameters \eqn{k} and \eqn{a}. The value of \eqn{a} is rescaled by
+dividing it by the number of incidences in the data, as required by NBMiner.
+The estimated total number of items \eqn{n} is also returned.
 
-\code{theta} and \code{pi} are just taken and added to the resulting
+The supplied values of \code{theta} and \code{pi} are added to the resulting
 parameter object.
 }
 \examples{

@@ -10,3 +10,6 @@ data_src
 docs
 _config.yml
 ^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
