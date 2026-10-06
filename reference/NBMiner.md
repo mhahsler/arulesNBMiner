@@ -1,13 +1,11 @@
 # NBMiner: Mine NB-Frequent Itemsets or NB-Precise Rules
 
-Calls the Java implementation of the depth-first search algorithm
-described in the paper cited below to mine NB-frequent itemsets or
-NB-precise rules.
+Mines NB-frequent itemsets or NB-precise rules.
 
 ## Usage
 
 ``` r
-NBMiner(data, parameter, control = NULL)
+NBMiner(data, parameter, control = NULL, ...)
 ```
 
 ## Arguments
@@ -19,16 +17,20 @@ NBMiner(data, parameter, control = NULL)
 
 - parameter:
 
-  a list of parameters (automatically converted into an object of class
-  `NBMinerParameter`). Reasonable parameters can be obtained using
+  an `NBMinerParameter` object or a named list of its parameters. Use
   [`NBMinerParameters()`](https://michael.hahsler.net/arulesNBMiner/reference/NBMinerParameters.md)
-  (see details section).
+  to estimate the model parameters.
 
 - control:
 
-  a list of control options (automatically converted into an object of
-  class `NBMinerControl`). Currently only `verbose` and `"debug"` (both
-  logical) are available.
+  an `NBMinerControl` object or a named list of control options.
+  `verbose` and `debug` are logical options that control progress and
+  diagnostic output.
+
+- ...:
+
+  named parameter overrides applied to `parameter` before mining. For
+  example, use `rules = TRUE` to mine rules or change `pi` or `theta`.
 
 ## Value
 
@@ -40,7 +42,38 @@ quality slot.
 
 ## Details
 
-The parameters can be estimated from the data using `NBMinerParameters`.
+Mines NB-frequent itemsets or NB-precise rules (Hahsler, 2006) are
+non-spurious patterns that occur significantly more often in the data
+than one would expect if the items were independent. Under independence,
+we model each item's frequency as a Poisson count with an item specific
+rate, and models variation in those rates with a Gamma distribution.
+Mixing the Poisson counts over the Gamma rates gives a negative binomial
+distribution. This flexible baseline captures the skewed frequency
+distributions common in transaction data: a few items occur often, while
+many occur rarely. The model parameters for the independence model can
+be estimated from the data using
+[`NBMinerParameters()`](https://michael.hahsler.net/arulesNBMiner/reference/NBMinerParameters.md).
+
+NBMiner considers for an itemset adding each possible other item. Given
+the independent baseline it predicts how many extensions would reach
+each frequency by chance. The `pi` parameter sets the minimum predicted
+precision for accepting extensions. Here, precision means the predicted
+proportion of accepted extensions that are true associations under the
+model. Only extensions with a precision of at least `pi` are accepted.
+
+The `theta` parameter controls pruning during search. For a larger
+itemset, it sets the required fraction of its immediate subsets that
+must support the itemset as an NB-frequent pattern. A value of 1 is most
+restrictive requiring all subsets also to be NB-frequent; 0 relaxes this
+condition. The intermediate default value 0.5 balances pruning with the
+chance of retaining associations whose items have different frequencies.
+
+`maxlen` limits the longest itemset considered, and `minlen` can set a
+minimum length for returned patterns.
+
+The mining algorithm uses a depth-first search implemented in Java.
+
+Details can be found in Hahsler (2006).
 
 ## References
 
@@ -54,25 +87,27 @@ Discovery, 13(2):137-166,* September 2006.
 ``` r
 data("Agrawal")
 
-## mine
-param <- NBMinerParameters(Agrawal.db, pi = 0.99, theta = 0.5, maxlen = 5,
-    minlen=1, trim = 0, verbose = TRUE, plot = TRUE)
+# Estimate independence model parameters
+param <- NBMinerParameters(Agrawal.db, trim = 0)
 #> using Expectation Maximization for missing zero class
 #> iteration = 1 , zero class = 3 , k = 0.9862909 , m = 277.9777 
 #> iteration = 2 , zero class = 3 , k = 0.9862909 , m = 277.9777 
 #> total items =  719 
+#> 
+#> Goodness of fit/chi-square test on binned count data
+#>   H0: Observed counts match the expected proportions.
+#>   Bins:  10 
+#>   X-squared =  5.778414  with  9  degrees of freedom
+#>   p.value =  0.7618744 
+#> 
 
-itemsets_NB <- NBMiner(Agrawal.db, parameter = param,
-    control = list(verbose = TRUE, debug = FALSE))
-#> 
-#> parameter specification:
-#>    pi theta   n         k           a minlen maxlen rules
-#>  0.99   0.5 719 0.9862909 0.001371754      1      5 FALSE
-#> 
-#> algorithmic control:
-#>  verbose debug
-#>     TRUE FALSE
-#> 
+
+# Mine non-spurious patterns
+itemsets_NB <- NBMiner(Agrawal.db,
+                       parameter = param,
+                       pi = 0.99,
+                       theta = 0.5,
+                       minlen = 2L)
 
 inspect(head(itemsets_NB))
 #>     items                                precision
@@ -83,23 +118,24 @@ inspect(head(itemsets_NB))
 #> [5] {item253, item438, item660, item849} 1.0000000
 #> [6] {item214, item648}                   0.9993312
 
-## remove patterns of length 1 (noise)
-i_NB <- itemsets_NB[size(itemsets_NB) > 1]
-patterns <- Agrawal.pat[size(Agrawal.pat) > 1]
+# Compare with the known patterns used to generate the data
+num_correct <- function(itemsets, patterns)
+    table(factor(rowSums(is.subset(itemsets, patterns)) > 0,
+          c(FALSE, TRUE)))
 
-## how many found itemsets are subsets of the patterns used in the db?
-table(rowSums(is.subset(i_NB,patterns)) > 0)
+# How many found itemsets are subsets of the patterns used in the db?
+num_correct(itemsets_NB, Agrawal.pat)
 #> 
-#> TRUE 
-#> 2603 
+#> FALSE  TRUE 
+#>     0  2603 
 
-## compare with the same number of the most frequent itemsets
-itemsets_supp <-  eclat(Agrawal.db, parameter = list(supp = 0.001))
+# Compare with the same number of the most frequent itemsets
+itemsets_supp <-  eclat(Agrawal.db, parameter = list(supp = 0.001, minlen = 2))
 #> Eclat
 #> 
 #> parameter specification:
 #>  tidLists support minlen maxlen            target  ext
-#>     FALSE   0.001      1     10 frequent itemsets TRUE
+#>     FALSE   0.001      2     10 frequent itemsets TRUE
 #> 
 #> algorithmic control:
 #>  sparse sort verbose
@@ -108,32 +144,28 @@ itemsets_supp <-  eclat(Agrawal.db, parameter = list(supp = 0.001))
 #> Absolute minimum support count: 20 
 #> 
 #> create itemset ... 
-#> set transactions ...[716 item(s), 20000 transaction(s)] done [0.05s].
-#> sorting and recoding items ... [656 item(s)] done [0.01s].
+#> set transactions ...[716 item(s), 20000 transaction(s)] done [0.02s].
+#> sorting and recoding items ... [656 item(s)] done [0.00s].
 #> creating sparse bit matrix ... [656 row(s), 20000 column(s)] done [0.00s].
-#> writing  ... [10873 set(s)] done [0.49s].
+#> writing  ... [10217 set(s)] done [0.34s].
 #> Creating S4 object  ... done [0.00s].
-i_supp <- itemsets_supp[size(itemsets_supp) > 1]
-i_supp <- head(sort(i_supp, by = "support"), length(i_NB))
-table(rowSums(is.subset(i_supp, patterns)) > 0)
+itemsets_supp <- head(sort(itemsets_supp, by = "support"), length(itemsets_NB))
+num_correct(itemsets_supp, Agrawal.pat)
 #> 
 #> FALSE  TRUE 
 #>   691  1912 
 
-## mine NB-precise rules
-param <- NBMinerParameters(Agrawal.db, pi = 0.99, theta = 0.5, maxlen = 5,
-    rules = TRUE, minlen = 1, trim = 0)
-rules_NB <- NBMiner(Agrawal.db, parameter = param,
-    control = list(verbose = TRUE, debug = FALSE))
-#> 
-#> parameter specification:
-#>    pi theta   n         k           a minlen maxlen rules
-#>  0.99   0.5 719 0.9862909 0.001371754      1      5  TRUE
-#> 
-#> algorithmic control:
-#>  verbose debug
-#>     TRUE FALSE
-#> 
+# we see that NBMiner is much more effective to recover the true patterns.
+
+
+# Mine NB-precise rules
+rules_NB <- NBMiner(Agrawal.db,
+                    parameter = param,
+                    pi = 0.99,
+                    theta = 0.5,
+                    rules = TRUE)
+rules_NB
+#> set of 5617 rules 
 
 inspect(head(rules_NB))
 #>     lhs                                    rhs       precision

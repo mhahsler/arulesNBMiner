@@ -5,9 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="NBMiner: Mine NB-Frequent Itemsets or NB-Precise Rules — NBMiner"><meta name="description" content="Calls the Java implementation of the depth-first search algorithm described
-in the paper cited below to mine NB-frequent itemsets or NB-precise rules."><meta property="og:description" content="Calls the Java implementation of the depth-first search algorithm described
-in the paper cited below to mine NB-frequent itemsets or NB-precise rules."><meta property="og:image" content="https://michael.hahsler.net/arulesNBMiner/logo.svg"></head><body>
+</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="NBMiner: Mine NB-Frequent Itemsets or NB-Precise Rules — NBMiner"><meta name="description" content="Mines NB-frequent itemsets or NB-precise rules."><meta property="og:description" content="Mines NB-frequent itemsets or NB-precise rules."><meta property="og:image" content="https://michael.hahsler.net/arulesNBMiner/logo.svg"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -42,13 +40,12 @@ in the paper cited below to mine NB-frequent itemsets or NB-precise rules."><met
     </div>
 
     <div class="ref-description section level2">
-    <p>Calls the Java implementation of the depth-first search algorithm described
-in the paper cited below to mine NB-frequent itemsets or NB-precise rules.</p>
+    <p>Mines NB-frequent itemsets or NB-precise rules.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">NBMiner</span><span class="op">(</span><span class="va">data</span>, <span class="va">parameter</span>, control <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">NBMiner</span><span class="op">(</span><span class="va">data</span>, <span class="va">parameter</span>, control <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -60,15 +57,19 @@ in the paper cited below to mine NB-frequent itemsets or NB-precise rules.</p>
 
 
 <dt id="arg-parameter">parameter<a class="anchor" aria-label="anchor" href="#arg-parameter"></a></dt>
-<dd><p>a list of parameters (automatically converted into an
-object of class <code>NBMinerParameter</code>). Reasonable parameters can be
-obtained using <code><a href="NBMinerParameters.html">NBMinerParameters()</a></code> (see details section).</p></dd>
+<dd><p>an <code>NBMinerParameter</code> object or a named list of its
+parameters. Use <code><a href="NBMinerParameters.html">NBMinerParameters()</a></code> to estimate the model parameters.</p></dd>
 
 
 <dt id="arg-control">control<a class="anchor" aria-label="anchor" href="#arg-control"></a></dt>
-<dd><p>a list of control options (automatically converted into an
-object of class <code>NBMinerControl</code>). Currently only <code>verbose</code> and
-<code>"debug"</code> (both logical) are available.</p></dd>
+<dd><p>an <code>NBMinerControl</code> object or a named list of control
+options. <code>verbose</code> and <code>debug</code> are logical options that control progress
+and diagnostic output.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>named parameter overrides applied to <code>parameter</code> before mining.
+For example, use <code>rules = TRUE</code> to mine rules or change <code>pi</code> or <code>theta</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -78,8 +79,34 @@ on the <code>rules</code> parameter. Estimated precision is stored in the qualit
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The parameters can be estimated from the data using
-<code>NBMinerParameters</code>.</p>
+    <p>Mines NB-frequent itemsets or NB-precise rules (Hahsler, 2006) are non-spurious
+patterns that occur significantly more often in the data than
+one would expect if the items were independent.
+Under independence, we model each item's frequency as a Poisson count
+with an item specific rate, and models variation in those
+rates with a Gamma distribution. Mixing the Poisson counts over the Gamma
+rates gives a negative binomial distribution. This flexible baseline
+captures the skewed frequency distributions common in transaction data:
+a few items occur often, while many occur rarely.
+The model parameters for the independence model can be estimated from the data
+using <code><a href="NBMinerParameters.html">NBMinerParameters()</a></code>.</p>
+<p>NBMiner considers for an itemset adding each possible other item.
+Given the independent baseline it predicts how many extensions would reach
+each frequency by chance. The <code>pi</code> parameter sets the minimum predicted
+precision for accepting extensions. Here, precision means the predicted
+proportion of accepted extensions that are true associations under the model.
+Only extensions with a precision of at least <code>pi</code> are accepted.</p>
+<p>The <code>theta</code> parameter controls pruning during search. For a larger itemset,
+it sets the required fraction of its immediate subsets that must support the
+itemset as an NB-frequent pattern. A value of 1 is most restrictive requiring
+all subsets also to be NB-frequent;
+0 relaxes this condition. The intermediate default value 0.5 balances
+pruning with the chance of retaining associations whose items have
+different frequencies.</p>
+<p><code>maxlen</code> limits the longest itemset considered, and <code>minlen</code> can set a
+minimum length for returned patterns.</p>
+<p>The mining algorithm uses a depth-first search implemented in Java.</p>
+<p>Details can be found in Hahsler (2006).</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -93,25 +120,27 @@ Discovery, 13(2):137-166,</em> September 2006.
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Agrawal"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## mine</span></span></span>
-<span class="r-in"><span><span class="va">param</span> <span class="op">&lt;-</span> <span class="fu"><a href="NBMinerParameters.html">NBMinerParameters</a></span><span class="op">(</span><span class="va">Agrawal.db</span>, pi <span class="op">=</span> <span class="fl">0.99</span>, theta <span class="op">=</span> <span class="fl">0.5</span>, maxlen <span class="op">=</span> <span class="fl">5</span>,</span></span>
-<span class="r-in"><span>    minlen<span class="op">=</span><span class="fl">1</span>, trim <span class="op">=</span> <span class="fl">0</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Estimate independence model parameters</span></span></span>
+<span class="r-in"><span><span class="va">param</span> <span class="op">&lt;-</span> <span class="fu"><a href="NBMinerParameters.html">NBMinerParameters</a></span><span class="op">(</span><span class="va">Agrawal.db</span>, trim <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> using Expectation Maximization for missing zero class</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> iteration = 1 , zero class = 3 , k = 0.9862909 , m = 277.9777 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> iteration = 2 , zero class = 3 , k = 0.9862909 , m = 277.9777 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> total items =  719 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Goodness of fit/chi-square test on binned count data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   H0: Observed counts match the expected proportions.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Bins:  10 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   X-squared =  5.778414  with  9  degrees of freedom</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   p.value =  0.7618744 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-plt img"><img src="NBMiner-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="va">itemsets_NB</span> <span class="op">&lt;-</span> <span class="fu">NBMiner</span><span class="op">(</span><span class="va">Agrawal.db</span>, parameter <span class="op">=</span> <span class="va">param</span>,</span></span>
-<span class="r-in"><span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">TRUE</span>, debug <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parameter specification:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    pi theta   n         k           a minlen maxlen rules</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.99   0.5 719 0.9862909 0.001371754      1      5 FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> algorithmic control:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  verbose debug</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     TRUE FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Mine non-spurious patterns</span></span></span>
+<span class="r-in"><span><span class="va">itemsets_NB</span> <span class="op">&lt;-</span> <span class="fu">NBMiner</span><span class="op">(</span><span class="va">Agrawal.db</span>,</span></span>
+<span class="r-in"><span>                       parameter <span class="op">=</span> <span class="va">param</span>,</span></span>
+<span class="r-in"><span>                       pi <span class="op">=</span> <span class="fl">0.99</span>,</span></span>
+<span class="r-in"><span>                       theta <span class="op">=</span> <span class="fl">0.5</span>,</span></span>
+<span class="r-in"><span>                       minlen <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/inspect.html" class="external-link">inspect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">itemsets_NB</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     items                                precision</span>
@@ -122,23 +151,24 @@ Discovery, 13(2):137-166,</em> September 2006.
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5] {item253, item438, item660, item849} 1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6] {item214, item648}                   0.9993312</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## remove patterns of length 1 (noise)</span></span></span>
-<span class="r-in"><span><span class="va">i_NB</span> <span class="op">&lt;-</span> <span class="va">itemsets_NB</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/size.html" class="external-link">size</a></span><span class="op">(</span><span class="va">itemsets_NB</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="va">patterns</span> <span class="op">&lt;-</span> <span class="va">Agrawal.pat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/size.html" class="external-link">size</a></span><span class="op">(</span><span class="va">Agrawal.pat</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="co"># Compare with the known patterns used to generate the data</span></span></span>
+<span class="r-in"><span><span class="va">num_correct</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">itemsets</span>, <span class="va">patterns</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/is.superset.html" class="external-link">is.subset</a></span><span class="op">(</span><span class="va">itemsets</span>, <span class="va">patterns</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>          <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## how many found itemsets are subsets of the patterns used in the db?</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/is.superset.html" class="external-link">is.subset</a></span><span class="op">(</span><span class="va">i_NB</span>,<span class="va">patterns</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># How many found itemsets are subsets of the patterns used in the db?</span></span></span>
+<span class="r-in"><span><span class="fu">num_correct</span><span class="op">(</span><span class="va">itemsets_NB</span>, <span class="va">Agrawal.pat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> TRUE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2603 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> FALSE  TRUE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     0  2603 </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## compare with the same number of the most frequent itemsets</span></span></span>
-<span class="r-in"><span><span class="va">itemsets_supp</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/pkg/arules/man/eclat.html" class="external-link">eclat</a></span><span class="op">(</span><span class="va">Agrawal.db</span>, parameter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>supp <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Compare with the same number of the most frequent itemsets</span></span></span>
+<span class="r-in"><span><span class="va">itemsets_supp</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/pkg/arules/man/eclat.html" class="external-link">eclat</a></span><span class="op">(</span><span class="va">Agrawal.db</span>, parameter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>supp <span class="op">=</span> <span class="fl">0.001</span>, minlen <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Eclat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> parameter specification:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  tidLists support minlen maxlen            target  ext</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     FALSE   0.001      1     10 frequent itemsets TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     FALSE   0.001      2     10 frequent itemsets TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> algorithmic control:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  sparse sort verbose</span>
@@ -147,32 +177,28 @@ Discovery, 13(2):137-166,</em> September 2006.
 <span class="r-out co"><span class="r-pr">#&gt;</span> Absolute minimum support count: 20 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> create itemset ... </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> set transactions ...[716 item(s), 20000 transaction(s)] done [0.05s].</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sorting and recoding items ... [656 item(s)] done [0.01s].</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set transactions ...[716 item(s), 20000 transaction(s)] done [0.02s].</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sorting and recoding items ... [656 item(s)] done [0.00s].</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> creating sparse bit matrix ... [656 row(s), 20000 column(s)] done [0.00s].</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> writing  ... [10873 set(s)] done [0.49s].</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> writing  ... [10217 set(s)] done [0.34s].</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Creating S4 object  ... done [0.00s].</span>
-<span class="r-in"><span><span class="va">i_supp</span> <span class="op">&lt;-</span> <span class="va">itemsets_supp</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/size.html" class="external-link">size</a></span><span class="op">(</span><span class="va">itemsets_supp</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="va">i_supp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">i_supp</span>, by <span class="op">=</span> <span class="st">"support"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">i_NB</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/is.superset.html" class="external-link">is.subset</a></span><span class="op">(</span><span class="va">i_supp</span>, <span class="va">patterns</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">itemsets_supp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">itemsets_supp</span>, by <span class="op">=</span> <span class="st">"support"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">itemsets_NB</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">num_correct</span><span class="op">(</span><span class="va">itemsets_supp</span>, <span class="va">Agrawal.pat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FALSE  TRUE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   691  1912 </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## mine NB-precise rules</span></span></span>
-<span class="r-in"><span><span class="va">param</span> <span class="op">&lt;-</span> <span class="fu"><a href="NBMinerParameters.html">NBMinerParameters</a></span><span class="op">(</span><span class="va">Agrawal.db</span>, pi <span class="op">=</span> <span class="fl">0.99</span>, theta <span class="op">=</span> <span class="fl">0.5</span>, maxlen <span class="op">=</span> <span class="fl">5</span>,</span></span>
-<span class="r-in"><span>    rules <span class="op">=</span> <span class="cn">TRUE</span>, minlen <span class="op">=</span> <span class="fl">1</span>, trim <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">rules_NB</span> <span class="op">&lt;-</span> <span class="fu">NBMiner</span><span class="op">(</span><span class="va">Agrawal.db</span>, parameter <span class="op">=</span> <span class="va">param</span>,</span></span>
-<span class="r-in"><span>    control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">TRUE</span>, debug <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> parameter specification:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    pi theta   n         k           a minlen maxlen rules</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.99   0.5 719 0.9862909 0.001371754      1      5  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> algorithmic control:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  verbose debug</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     TRUE FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="co"># we see that NBMiner is much more effective to recover the true patterns.</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Mine NB-precise rules</span></span></span>
+<span class="r-in"><span><span class="va">rules_NB</span> <span class="op">&lt;-</span> <span class="fu">NBMiner</span><span class="op">(</span><span class="va">Agrawal.db</span>,</span></span>
+<span class="r-in"><span>                    parameter <span class="op">=</span> <span class="va">param</span>,</span></span>
+<span class="r-in"><span>                    pi <span class="op">=</span> <span class="fl">0.99</span>,</span></span>
+<span class="r-in"><span>                    theta <span class="op">=</span> <span class="fl">0.5</span>,</span></span>
+<span class="r-in"><span>                    rules <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rules_NB</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> set of 5617 rules </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/inspect.html" class="external-link">inspect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rules_NB</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     lhs                                    rhs       precision</span>
@@ -182,7 +208,6 @@ Discovery, 13(2):137-166,</em> September 2006.
 <span class="r-out co"><span class="r-pr">#&gt;</span> [4] {item636, item648}                  =&gt; {item853} 1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5] {item76, item669, item722, item879} =&gt; {item808} 1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6] {item99, item823}                   =&gt; {item860} 1.0000000</span>
-<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -67,8 +67,8 @@
 </div>
 <p><a href="https://CRAN.R-project.org/package=arulesNBMiner" class="external-link"><img src="https://www.r-pkg.org/badges/version/arulesNBMiner" alt="Package on CRAN"></a> <a href="https://CRAN.R-project.org/package=arulesNBMiner" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/arulesNBMiner" alt="CRAN RStudio mirror downloads"></a> <img src="https://img.shields.io/cran/l/arulesNBMiner" alt="License"><a href="https://mhahsler.r-universe.dev/arulesNBMiner" class="external-link"><img src="https://mhahsler.r-universe.dev/badges/arulesNBMiner" alt="r-universe status"></a></p>
 <p><strong>Maintainer:</strong> <a href="https://michael.hahsler.net" class="external-link">Michael Hahsler</a></p>
-<p>This R package extends <a href="https://github.com/mhahsler/arules" class="external-link">arules</a> with NBMiner, an implementation of the model-based mining algorithm for NB-frequent itemsets described in Michael Hahsler’s paper, <a href="https://dx.doi.org/10.1007/s10618-005-0026-2" class="external-link">“A model-based frequency constraint for mining associations from transaction data.”</a> <em>Data Mining and Knowledge Discovery,</em> 13(2):137-166, September 2006.</p>
-<p>This algorithm dynamically chooses support for itemsets based on the deviation from an independence model. The package also supports mining NB-precise rules.</p>
+<p>This R package extends <a href="https://michael.hahsler.net/arules" class="external-link">arules</a> with NBMiner, an implementation of the model-based mining algorithm for NB-frequent itemsets described in Michael Hahsler’s paper, <a href="https://dx.doi.org/10.1007/s10618-005-0026-2" class="external-link">“A model-based frequency constraint for mining associations from transaction data.”</a> <em>Data Mining and Knowledge Discovery,</em> 13(2):137-166, September 2006.</p>
+<p>This algorithm dynamically chooses support for itemsets based on the deviation from a fitted independence model. NBMiner is better at suppressing spurious patters and finds interesting patterns with lower support compared to the traditional minimum support-based algorithms.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -84,40 +84,42 @@
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>Estimate negative binomial distribution (NBD) model parameters for the Agrawal data set.</p>
+<p>Estimate negative binomial distribution (NBD) model parameters for the arules Groceries data set.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/mhahsler/arulesNBMiner" class="external-link">"arulesNBMiner"</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Agrawal"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"Groceries"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">param</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/NBMinerParameters.html">NBMinerParameters</a></span><span class="op">(</span><span class="va">Agrawal.db</span>, pi <span class="op">=</span> <span class="fl">0.99</span>, theta <span class="op">=</span> <span class="fl">0.5</span>, maxlen <span class="op">=</span> <span class="fl">5</span>, minlen <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    trim <span class="op">=</span> <span class="fl">0</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="do">## using Expectation Maximization for missing zero class</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="do">## iteration = 1 , zero class = 3 , k = 0.99 , m = 278 </span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="do">## iteration = 2 , zero class = 3 , k = 0.99 , m = 278 </span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="do">## total items =  719</span></span></code></pre></div>
-<p><img src="reference/figures/README-NB_estimation-1.png"><!-- --></p>
+<span><span class="va">param</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/NBMinerParameters.html">NBMinerParameters</a></span><span class="op">(</span><span class="va">Groceries</span>, trim <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="do">## 17 item(s) trimmed, leaving  152  items. </span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="do">## using Expectation Maximization for missing zero class</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="do">## iteration = 1 , zero class = 2 , k = 0.86 , m = 153 </span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="do">## total items =  154 </span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="do">## Goodness of fit/chi-square test on binned count data</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="do">##   H0: Observed counts match the expected proportions.</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="do">##   Bins:  10 </span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="do">##   X-squared =  6.6  with  9  degrees of freedom</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="do">##   p.value =  0.68</span></span></code></pre></div>
+<p><img src="reference/figures/README-NB_estimation-1.png"><!-- --> Note that the model shows independence but the dataset contains a significant amount of correlated items shown by the larger cumulative frequency.</p>
 <p>Mine NB-frequent itemsets</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">itemsets_NB</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/NBMiner.html">NBMiner</a></span><span class="op">(</span><span class="va">Agrawal.db</span>, parameter <span class="op">=</span> <span class="va">param</span>, control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    debug <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="do">## parameter specification:</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="do">##    pi theta   n    k      a minlen maxlen rules</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="do">##  0.99   0.5 719 0.99 0.0014      1      5 FALSE</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="do">## algorithmic control:</span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="do">##  verbose debug</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="do">##     TRUE FALSE</span></span></code></pre></div>
-<p>Inspect some itemsets with the highest precision.</p>
+<code class="sourceCode R"><span><span class="va">itemsets_NB</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/NBMiner.html">NBMiner</a></span><span class="op">(</span><span class="va">Groceries</span>, parameter <span class="op">=</span> <span class="va">param</span>, minlen <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span></span>
+<span><span class="va">itemsets_NB</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="do">## set of 2881 itemsets</span></span></code></pre></div>
+<p>Add support and inspect some NB-frequent itemsets with the highest precision.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/inspect.html" class="external-link">inspect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">itemsets_NB</span>, by <span class="op">=</span> <span class="st">"precision"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="do">##     items                                        precision</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## [1] {item220, item956, item964}                  1        </span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">## [2] {item510, item667, item885}                  1        </span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="do">## [3] {item452, item956, item964}                  1        </span></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="do">## [4] {item60, item173, item417, item440, item831} 1        </span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="do">## [5] {item258, item452, item956}                  1        </span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="do">## [6] {item149, item231, item611}                  1</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/associations-class.html" class="external-link">quality</a></span><span class="op">(</span><span class="va">itemsets_NB</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/associations-class.html" class="external-link">quality</a></span><span class="op">(</span><span class="va">itemsets_NB</span><span class="op">)</span>, support <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/arules/man/interestMeasure.html" class="external-link">interestMeasure</a></span><span class="op">(</span><span class="va">itemsets_NB</span>,</span>
+<span>    <span class="st">"support"</span>, transactions <span class="op">=</span> <span class="va">Groceries</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/inspect.html" class="external-link">inspect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">itemsets_NB</span>, by <span class="op">=</span> <span class="st">"precision"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="do">##     items                                        precision support</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## [1] {bottled beer, liquor, red/blush wine}       1         0.00193</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">## [2] {bottled beer, liquor}                       1         0.00468</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="do">## [3] {soda, bottled beer, liquor, red/blush wine} 1         0.00081</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="do">## [4] {whole milk, curd}                           1         0.02613</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="do">## [5] {whole milk, rolls/buns, margarine}          1         0.00793</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="do">## [6] {whole milk, butter}                         1         0.02755</span></span></code></pre></div>
+<p>A precision close to 1 means that there is very little chance that they are spurious. We see that some very low support itemsets are under the top NB-frequent itemsets.</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
