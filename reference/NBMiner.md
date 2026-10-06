@@ -147,7 +147,7 @@ itemsets_supp <-  eclat(Agrawal.db, parameter = list(supp = 0.001, minlen = 2))
 #> set transactions ...[716 item(s), 20000 transaction(s)] done [0.02s].
 #> sorting and recoding items ... [656 item(s)] done [0.00s].
 #> creating sparse bit matrix ... [656 row(s), 20000 column(s)] done [0.00s].
-#> writing  ... [10217 set(s)] done [0.36s].
+#> writing  ... [10217 set(s)] done [0.40s].
 #> Creating S4 object  ... done [0.00s].
 itemsets_supp <- head(sort(itemsets_supp, by = "support"), length(itemsets_NB))
 num_correct(itemsets_supp, Agrawal.pat)

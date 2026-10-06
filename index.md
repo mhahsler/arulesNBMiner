@@ -9,7 +9,7 @@ status](https://mhahsler.r-universe.dev/badges/arulesNBMiner)](https://mhahsler.
 
 **Maintainer:** [Michael Hahsler](https://michael.hahsler.net)
 
-This R package extends [`arules`](https://michael.hahsler.net/arules)
+This R package extends [`arules`](https://michael.hahsler.net/arules/)
 with NBMiner, an implementation of the model-based mining algorithm for
 NB-frequent itemsets described in Michael Hahsler’s paper, [“A
 model-based frequency constraint for mining associations from
