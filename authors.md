@@ -10,14 +10,15 @@
 Source:
 [`inst/CITATION`](https://github.com/mhahsler/arulesNBMiner/blob/master/inst/CITATION)
 
-Hahsler M (????). *arulesNBMiner: Mining NB-Frequent Itemsets and
-NB-Precise Rules*. R package version 0.1.9,
+Hahsler M (2026). *arulesNBMiner: Mining NB-Frequent Itemsets and
+NB-Precise Rules*. R package version 0.1.10,
 <https://github.com/mhahsler/arulesNBMiner>.
 
     @Manual{,
       title = {arulesNBMiner: Mining NB-Frequent Itemsets and NB-Precise Rules},
       author = {Michael Hahsler},
-      note = {R package version 0.1.9},
+      year = {2026},
+      note = {R package version 0.1.10},
       url = {https://github.com/mhahsler/arulesNBMiner},
     }
 

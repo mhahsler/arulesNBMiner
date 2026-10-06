@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">arulesNBMiner</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.10</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>object of class <a href="https://rdrr.io/pkg/arules/man/transactions-class.html" class="external-link">arules::transactions</a>.</p></dd>
+<dd><p>object of class <code><a href="https://rdrr.io/pkg/arules/man/transactions-class.html" class="external-link">arules::transactions</a></code>.</p></dd>
 
 
 <dt id="arg-parameter">parameter<a class="anchor" aria-label="anchor" href="#arg-parameter"></a></dt>
@@ -74,7 +74,7 @@ For example, use <code>rules = TRUE</code> to mine rules or change <code>pi</cod
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An object of class <a href="https://rdrr.io/pkg/arules/man/itemsets-class.html" class="external-link">arules::itemsets</a> or <a href="https://rdrr.io/pkg/arules/man/rules-class.html" class="external-link">arules::rules</a>, depending
+    <p>An object of class <code><a href="https://rdrr.io/pkg/arules/man/itemsets-class.html" class="external-link">arules::itemsets</a></code> or <code><a href="https://rdrr.io/pkg/arules/man/rules-class.html" class="external-link">arules::rules</a></code>, depending
 on the <code>rules</code> parameter. Estimated precision is stored in the quality slot.</p>
     </div>
     <div class="section level2">
@@ -112,7 +112,7 @@ minimum length for returned patterns.</p>
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Michael Hahsler. A model-based frequency constraint for mining
 associations from transaction data. <em>Data Mining and Knowledge
-Discovery, 13(2):137-166,</em> September 2006.
+Discovery</em>, 13(2):137-166, September 2006.
 <a href="https://doi.org/10.1007/s10618-005-0026-2" class="external-link">doi:10.1007/s10618-005-0026-2</a></p>
     </div>
 
@@ -180,7 +180,7 @@ Discovery, 13(2):137-166,</em> September 2006.
 <span class="r-out co"><span class="r-pr">#&gt;</span> set transactions ...[716 item(s), 20000 transaction(s)] done [0.02s].</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sorting and recoding items ... [656 item(s)] done [0.00s].</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> creating sparse bit matrix ... [656 row(s), 20000 column(s)] done [0.00s].</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> writing  ... [10217 set(s)] done [0.34s].</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> writing  ... [10217 set(s)] done [0.36s].</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Creating S4 object  ... done [0.00s].</span>
 <span class="r-in"><span><span class="va">itemsets_supp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/arules/man/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">itemsets_supp</span>, by <span class="op">=</span> <span class="st">"support"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">itemsets_NB</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">num_correct</span><span class="op">(</span><span class="va">itemsets_supp</span>, <span class="va">Agrawal.pat</span><span class="op">)</span></span></span>

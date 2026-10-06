@@ -31,7 +31,8 @@ able to recover them.
 ## Load the data
 
 Load the package and its example data. `Agrawal.db` is a `transactions`
-object, the input format used by `arulesNBMiner`.
+object, the input format used by
+[`NBMiner()`](https://michael.hahsler.net/arulesNBMiner/reference/NBMiner.md).
 
 ``` r
 

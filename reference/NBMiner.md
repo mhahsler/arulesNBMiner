@@ -13,7 +13,7 @@ NBMiner(data, parameter, control = NULL, ...)
 - data:
 
   object of class
-  [arules::transactions](https://rdrr.io/pkg/arules/man/transactions-class.html).
+  [`arules::transactions`](https://rdrr.io/pkg/arules/man/transactions-class.html).
 
 - parameter:
 
@@ -35,8 +35,8 @@ NBMiner(data, parameter, control = NULL, ...)
 ## Value
 
 An object of class
-[arules::itemsets](https://rdrr.io/pkg/arules/man/itemsets-class.html)
-or [arules::rules](https://rdrr.io/pkg/arules/man/rules-class.html),
+[`arules::itemsets`](https://rdrr.io/pkg/arules/man/itemsets-class.html)
+or [`arules::rules`](https://rdrr.io/pkg/arules/man/rules-class.html),
 depending on the `rules` parameter. Estimated precision is stored in the
 quality slot.
 
@@ -79,7 +79,7 @@ Details can be found in Hahsler (2006).
 
 Michael Hahsler. A model-based frequency constraint for mining
 associations from transaction data. *Data Mining and Knowledge
-Discovery, 13(2):137-166,* September 2006.
+Discovery*, 13(2):137-166, September 2006.
 [doi:10.1007/s10618-005-0026-2](https://doi.org/10.1007/s10618-005-0026-2)
 
 ## Examples
@@ -147,7 +147,7 @@ itemsets_supp <-  eclat(Agrawal.db, parameter = list(supp = 0.001, minlen = 2))
 #> set transactions ...[716 item(s), 20000 transaction(s)] done [0.02s].
 #> sorting and recoding items ... [656 item(s)] done [0.00s].
 #> creating sparse bit matrix ... [656 row(s), 20000 column(s)] done [0.00s].
-#> writing  ... [10217 set(s)] done [0.34s].
+#> writing  ... [10217 set(s)] done [0.36s].
 #> Creating S4 object  ... done [0.00s].
 itemsets_supp <- head(sort(itemsets_supp, by = "support"), length(itemsets_NB))
 num_correct(itemsets_supp, Agrawal.pat)

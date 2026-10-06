@@ -26,7 +26,7 @@ NBMinerParameters(
 - data:
 
   the data as an object of class
-  [arules::transactions](https://rdrr.io/pkg/arules/man/transactions-class.html).
+  [`arules::transactions`](https://rdrr.io/pkg/arules/man/transactions-class.html).
 
 - trim:
 
@@ -98,7 +98,7 @@ thus will lead to a model that grossly overestimates the probability of
 seeing items with high frequencies. For a more robust estimate, we can
 trim a suitable percentage of the items with the highest frequencies. A
 suitable percentage can be found by visual comparison of the empirical
-data and the estimated model or by minimizing the \\\Chi^2\\-value of
+data and the estimated model or by minimizing the \\\chi^2\\-value of
 the goodness-of-fit test which is reported when run with
 `verbose = TRUE`. A diagnostic plot comparing the observed data with the
 model is shown with `plot = TRUE`. The plot shows the number of items
