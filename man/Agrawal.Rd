@@ -42,4 +42,7 @@ Matthias Jarke, and Carlo Zaniolo, editors, \emph{Proceedings of the 20th
 International Conference on Very Large Data Bases, VLDB}, pages 487-499,
 Santiago, Chile.
 }
+\seealso{
+\code{\link[arules:random.transactions]{arules::random.transactions()}}
+}
 \keyword{datasets}

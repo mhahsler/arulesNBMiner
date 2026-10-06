@@ -9,66 +9,105 @@ NBMinerParameters(
   trim = 0.01,
   pi = 0.99,
   theta = 0.5,
+  bins = 10,
   minlen = 1,
   maxlen = 5,
   rules = FALSE,
-  plot = FALSE,
-  verbose = FALSE,
+  plot = TRUE,
+  verbose = TRUE,
   getdata = FALSE
 )
 }
 \arguments{
 \item{data}{the data as an object of class \link[arules:transactions]{arules::transactions}.}
 
-\item{trim}{fraction of incidences to trim off the tail of the frequency
-distribution of the data.}
+\item{trim}{fraction of the most frequent items to exclude when fitting the
+baseline model.}
 
-\item{pi}{precision threshold \eqn{\pi}.}
+\item{pi}{minimum predicted precision required to accept an itemset
+extension or rule.}
 
-\item{theta}{pruning parameter \eqn{\theta}.}
+\item{theta}{fraction of an itemset's immediate subsets that must be
+NB-frequent for the itemset to be considered during search.}
 
-\item{minlen}{minimum number of items in found itemsets (default: 1).}
+\item{bins}{number of bins used for the chi-squared goodness-of-fit test.}
 
-\item{maxlen}{maximum number of items in found itemsets (default: 5).}
+\item{minlen}{minimum number of items in returned itemsets (default: 1).}
 
-\item{rules}{mine NB-precise rules instead of NB-frequent itemsets?}
+\item{maxlen}{maximum number of items in returned itemsets (default: 5).}
 
-\item{plot}{plot the model?}
+\item{rules}{whether to mine NB-precise rules instead of NB-frequent
+itemsets.}
 
-\item{verbose}{use verbose output for the estimation procedure.}
+\item{plot}{whether to plot the observed and fitted frequency distributions.}
 
-\item{getdata}{also return the observed and estimated counts?}
+\item{verbose}{whether to print progress and goodness-of-fit results.}
+
+\item{getdata}{whether to return the parameter object together with observed
+counts, expected counts, and the chi-squared test result.}
 }
 \value{
 An object of class \code{NBMinerParameter} for use with \code{\link[=NBMiner]{NBMiner()}}. If
 \code{getdata = TRUE}, a list containing the parameter object, observed counts,
-and expected counts is returned.
+expected counts, and the result of the chi-squared test is returned.
 }
 \description{
-Estimate the global negative binomial data model used by NBMiner and
-create an appropriate parameter object.
+Estimate the parameters for the global negative binomial independence
+model used by NBMiner.
 }
 \details{
-The EM algorithm estimates the global NB model because the zero class
-(items that do not occur in the dataset) is not observed. The result is the
-two NB parameters \eqn{k} and \eqn{a}. The value of \eqn{a} is rescaled by
-dividing it by the number of incidences in the data, as required by NBMiner.
-The estimated total number of items \eqn{n} is also returned.
+The model is fit using observed item frequencies in the data.
+The expectation maximization (EM) algorithm (Dempster et al, 1977)
+is used to estimate the
+global NB model because
+the zero class (missing values representing items that do not occur in
+the dataset) is not observed.
+This procedure iteratively estimates missing values using the observed data
+and the model using intermediate values of the parameters,
+and then uses the estimated data and the observed data to update the
+parameters for the next iteration.
+The procedure stops when the parameters stabilize.
 
-The supplied values of \code{theta} and \code{pi} are added to the resulting
-parameter object.
+Another common issue is the presence of outliers with unusually high frequencies.
+These outliers will distort the mean and the variance and thus will lead
+to a model that grossly overestimates the probability of seeing items with
+high frequencies. For a more robust estimate, we can trim a
+suitable percentage of the items with the highest frequencies.
+A suitable percentage can be found by visual comparison of the empirical
+data and the estimated model or by minimizing the
+\eqn{\Chi^2}{Chi-squared}-value of the goodness-of-fit test which is
+reported when run with \code{verbose = TRUE}. A diagnostic plot
+comparing the observed data with the model is shown with \code{plot = TRUE}.
+The plot shows the number of items with a frequency larger than \eqn{r}.
+
+The result is the
+two NB parameters \eqn{k} and \eqn{a}, but note that \eqn{a} is rescaled by
+dividing it by the number of incidences in the data, as required by NBMiner.
+The estimated total number of items \eqn{n} including the fitted number of
+unseen items (items with a frequency of 0) is also returned.
+
+Only \code{data} and \code{trim} are used for the estimation. \code{bins} can be used to
+change the number of bins used in the goodness-of-fit test. The other
+parameters are stored in the parameter object for use by \code{\link[=NBMiner]{NBMiner()}}.
 }
 \examples{
 data("Epub")
+Epub
 
-param <- NBMinerParameters(Epub, trim = 0.05, plot = TRUE, verbose = TRUE)
+param <- NBMinerParameters(Epub, trim = 0.04)
 param
 
 }
 \references{
 Michael Hahsler. A model-based frequency constraint for mining
 associations from transaction data. \emph{Data Mining and Knowledge
-Discovery,13(2):137-166,} September 2006.
+Discovery},13(2):137-166, September 2006.
 \doi{10.1007/s10618-005-0026-2}
+
+Dempster, A. P., Laird, N. M., and Rubin, D. B. (1977).
+Maximum likelihood from incomplete data via the EM algorithm.
+\emph{Journal of the Royal Statistical Society, Series B (Methodological),}
+39:1–38.
+\doi{10.1111/j.2517-6161.1977.tb01600.x}
 }
 \keyword{models}

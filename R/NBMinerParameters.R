@@ -1,51 +1,89 @@
 #' Estimate Global Model Parameters from Data
 #'
-#' Estimate the global negative binomial data model used by NBMiner and
-#' create an appropriate parameter object.
+#' Estimate the parameters for the global negative binomial independence
+#' model used by NBMiner.
 #'
-#' The EM algorithm estimates the global NB model because the zero class
-#' (items that do not occur in the dataset) is not observed. The result is the
-#' two NB parameters \eqn{k} and \eqn{a}. The value of \eqn{a} is rescaled by
+#' The model is fit using observed item frequencies in the data.
+#' The expectation maximization (EM) algorithm (Dempster et al, 1977)
+#' is used to estimate the
+#' global NB model because
+#' the zero class (missing values representing items that do not occur in
+#' the dataset) is not observed.
+#' This procedure iteratively estimates missing values using the observed data
+#' and the model using intermediate values of the parameters,
+#' and then uses the estimated data and the observed data to update the
+#' parameters for the next iteration.
+#' The procedure stops when the parameters stabilize.
+#'
+#' Another common issue is the presence of outliers with unusually high frequencies.
+#' These outliers will distort the mean and the variance and thus will lead
+#' to a model that grossly overestimates the probability of seeing items with
+#' high frequencies. For a more robust estimate, we can trim a
+#' suitable percentage of the items with the highest frequencies.
+#' A suitable percentage can be found by visual comparison of the empirical
+#' data and the estimated model or by minimizing the
+#' \eqn{\Chi^2}{Chi-squared}-value of the goodness-of-fit test which is
+#' reported when run with `verbose = TRUE`. A diagnostic plot
+#' comparing the observed data with the model is shown with `plot = TRUE`.
+#' The plot shows the number of items with a frequency larger than \eqn{r}.
+#'
+#' The result is the
+#' two NB parameters \eqn{k} and \eqn{a}, but note that \eqn{a} is rescaled by
 #' dividing it by the number of incidences in the data, as required by NBMiner.
-#' The estimated total number of items \eqn{n} is also returned.
+#' The estimated total number of items \eqn{n} including the fitted number of
+#' unseen items (items with a frequency of 0) is also returned.
 #'
-#' The supplied values of `theta` and `pi` are added to the resulting
-#' parameter object.
+#' Only `data` and `trim` are used for the estimation. `bins` can be used to
+#' change the number of bins used in the goodness-of-fit test. The other
+#' parameters are stored in the parameter object for use by [NBMiner()].
 #'
 #' @param data the data as an object of class [arules::transactions].
-#' @param trim fraction of incidences to trim off the tail of the frequency
-#' distribution of the data.
-#' @param pi precision threshold \eqn{\pi}.
-#' @param theta pruning parameter \eqn{\theta}.
-#' @param minlen minimum number of items in found itemsets (default: 1).
-#' @param maxlen maximum number of items in found itemsets (default: 5).
-#' @param rules mine NB-precise rules instead of NB-frequent itemsets?
-#' @param plot plot the model?
-#' @param verbose use verbose output for the estimation procedure.
-#' @param getdata also return the observed and estimated counts?
+#' @param trim fraction of the most frequent items to exclude when fitting the
+#'   baseline model.
+#' @param pi minimum predicted precision required to accept an itemset
+#'   extension or rule.
+#' @param theta fraction of an itemset's immediate subsets that must be
+#'   NB-frequent for the itemset to be considered during search.
+#' @param bins number of bins used for the chi-squared goodness-of-fit test.
+#' @param minlen minimum number of items in returned itemsets (default: 1).
+#' @param maxlen maximum number of items in returned itemsets (default: 5).
+#' @param rules whether to mine NB-precise rules instead of NB-frequent
+#'   itemsets.
+#' @param plot whether to plot the observed and fitted frequency distributions.
+#' @param verbose whether to print progress and goodness-of-fit results.
+#' @param getdata whether to return the parameter object together with observed
+#'   counts, expected counts, and the chi-squared test result.
 #' @return An object of class `NBMinerParameter` for use with [NBMiner()]. If
 #' `getdata = TRUE`, a list containing the parameter object, observed counts,
-#' and expected counts is returned.
+#' expected counts, and the result of the chi-squared test is returned.
 #' @references Michael Hahsler. A model-based frequency constraint for mining
-#' associations from transaction data. \emph{Data Mining and Knowledge
-#' Discovery,13(2):137-166,} September 2006.
+#' associations from transaction data. _Data Mining and Knowledge
+#' Discovery_,13(2):137-166, September 2006.
 #' \doi{10.1007/s10618-005-0026-2}
+#'
+#' Dempster, A. P., Laird, N. M., and Rubin, D. B. (1977).
+#' Maximum likelihood from incomplete data via the EM algorithm.
+#' _Journal of the Royal Statistical Society, Series B (Methodological),_
+#' 39:1–38.
+#' \doi{10.1111/j.2517-6161.1977.tb01600.x}
 #' @keywords models
 #' @examples
 #' data("Epub")
+#' Epub
 #'
-#' param <- NBMinerParameters(Epub, trim = 0.05, plot = TRUE, verbose = TRUE)
+#' param <- NBMinerParameters(Epub, trim = 0.04)
 #' param
 #'
 NBMinerParameters <- function(data,
                               trim = 0.01,
                               pi = 0.99,
                               theta = 0.5,
+                              bins = 10,
                               minlen = 1,
                               maxlen = 5,
                               rules = FALSE,
-                              plot = FALSE,
-                              verbose = FALSE,
+                              plot = TRUE,
+                              verbose = TRUE,
                               getdata = FALSE) {
   itemf <- itemFrequency(data, type = "abs")
 
@@ -54,16 +92,28 @@ NBMinerParameters <- function(data,
   r <- .estim_nbinom(obs,
                      trim = trim,
                      missing_zeros = TRUE,
-                     verb = verbose)
+                     verbose = verbose)
 
   k <- r$k
   a <- r$mean * r$k
   n <- r$items
 
   ## use the estimate for n for the number of items with 0 occurrences
+  # Note: obs[1] can get negative here!
   obs[1] <- n - sum(obs)
-
   exp <- dnbinom(0:max(itemf), size = k, prob = 1 / (1 + a))
+
+  # warns for bins with low counts
+  chitest <- suppressWarnings(.chi2_test(obs, exp, bins = bins))
+
+  if (verbose) {
+    cat("\nGoodness of fit/chi-square test on binned count data\n")
+    cat("  H0: Observed counts match the expected proportions.\n")
+    cat("  Bins: ", bins, "\n")
+    cat("  X-squared = ", chitest$statistic, " with ",
+        chitest$parameter," degrees of freedom\n")
+    cat("  p.value = ", chitest$p.value, "\n\n")
+  }
 
   if (plot) {
     observed <- n - cumsum(obs)
@@ -74,8 +124,9 @@ NBMinerParameters <- function(data,
       0:maxx,
       observed,
       type = "l",
-      xlab = "r",
-      ylab = "n - cumulative frequency",
+      main = "NB model fit to data",
+      xlab = "item frequency r",
+      ylab = "number of items with frequency > r",
       xlim = c(0, maxx),
       ylim = c(0, max(observed, expected, na.rm = TRUE))
     )
@@ -108,7 +159,8 @@ NBMinerParameters <- function(data,
   else
     list(parameter = param,
          obs = obs,
-         exp = exp)
+         exp = exp,
+         chisq = chitest)
 }
 
 
@@ -125,7 +177,7 @@ NBMinerParameters <- function(data,
                           missing_zeros = FALSE,
                           tol = 0.0001,
                           trim = 0,
-                          verb = FALSE) {
+                          verbose = FALSE) {
   items <- sum(counts_hist)
   r_max <- length(counts_hist)
   trimmed_items <- 0
@@ -140,7 +192,7 @@ NBMinerParameters <- function(data,
     }
 
     items <- sum(counts_hist)
-    if (verb)
+    if (verbose)
       cat(trimmed_items,
           "item(s) trimmed, leaving ",
           items,
@@ -156,7 +208,7 @@ NBMinerParameters <- function(data,
   r_max <- r_max - 1
 
   if (missing_zeros == FALSE) {
-    if (verb)
+    if (verbose)
       cat("using method of moments\n")
     par = .estim_nbd_moments(counts_hist)
     return(
@@ -173,7 +225,7 @@ NBMinerParameters <- function(data,
   }
 
   ## now with missing zeros
-  if (verb)
+  if (verbose)
     cat("using Expectation Maximization for missing zero class\n")
 
   ## get start values for Expectation Maximization
@@ -202,7 +254,7 @@ NBMinerParameters <- function(data,
     k <- par$k
     m <- par$mean
 
-    if (verb)
+    if (verbose)
       cat("iteration =",
           i,
           ", zero class =",
@@ -221,7 +273,7 @@ NBMinerParameters <- function(data,
   p_nbinom[r_max + 1] <- 1 - sum(p_nbinom)
 
   items <- items + counts_hist[1] ### add zero class
-  if (verb)
+  if (verbose)
     cat ("total items = ", items, "\n")
 
   list(
@@ -265,43 +317,28 @@ NBMinerParameters <- function(data,
 .chi2_test <- function (obs,
                         exp,
                         parameters = 3,
-                        bins = NULL,
-                        verb = FALSE) {
-  ##
-  ## bins is a list of index vectors to build classes
-  ## e.g., list(c(0), c(1,2), c(3:7), c(7:100)) makes
-  ## a bins for 1. r=0, 2. r=1 and 2, 3. r=3-6 and 4. r=7-100
-  ##
-  ## bins = NULL means no binning
+                        bins = 20,
+                        verbose = FALSE) {
+  # obs ... counts
+  # exp ... probabilities
 
   n <- sum(obs)
 
-  if (!is.null(bins)) {
-    bins <- as.list(bins)
-    if (verb) {
-      cat("Binning data\n")
-    }
-    obs <- sapply(bins, function(x)
-      sum(obs[x + 1]))
-    exp <- sapply(bins, function(x)
-      sum(exp[x + 1]))
+  # exclude 0 counts
+  obs <- obs[-1]
+  exp <- exp[-1]
 
-  }
+  # bin data
+  cuts <- cut(seq_along(obs), breaks = bins, labels = FALSE)
+  obs <- sapply(seq_len(bins), FUN = function(i) sum(obs[i]))
+  exp <- sapply(seq_len(bins), FUN = function(i) sum(exp[i]))
 
-  if (verb) {
+  if (verbose) {
     print(cbind(obs, exp = exp * n))
   }
 
-  chitest <- chisq.test(obs, p = exp)
-  chitest$prob <- pchisq(
-    chitest$statistic,
-    ##length(obs)-parameters-1,
-    length(obs) - 1,
-    log.p = FALSE,
-    lower.tail = FALSE
-  )
-  attr(chitest$prob, "names") <- "p-value"
+  # make sure exp sums up to 1
+  exp <- exp / sum(exp)
 
-
-  chitest
+  chisq.test(obs, p = exp)
 }

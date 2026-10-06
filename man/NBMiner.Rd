@@ -6,63 +6,103 @@
 \alias{NBMinerParameter-class}
 \title{NBMiner: Mine NB-Frequent Itemsets or NB-Precise Rules}
 \usage{
-NBMiner(data, parameter, control = NULL)
+NBMiner(data, parameter, control = NULL, ...)
 }
 \arguments{
 \item{data}{object of class \link[arules:transactions]{arules::transactions}.}
 
-\item{parameter}{a list of parameters (automatically converted into an
-object of class \code{NBMinerParameter}). Reasonable parameters can be
-obtained using \code{\link[=NBMinerParameters]{NBMinerParameters()}} (see details section).}
+\item{parameter}{an \code{NBMinerParameter} object or a named list of its
+parameters. Use \code{\link[=NBMinerParameters]{NBMinerParameters()}} to estimate the model parameters.}
 
-\item{control}{a list of control options (automatically converted into an
-object of class \code{NBMinerControl}). Currently only \code{verbose} and
-\code{"debug"} (both logical) are available.}
+\item{control}{an \code{NBMinerControl} object or a named list of control
+options. \code{verbose} and \code{debug} are logical options that control progress
+and diagnostic output.}
+
+\item{...}{named parameter overrides applied to \code{parameter} before mining.
+For example, use \code{rules = TRUE} to mine rules or change \code{pi} or \code{theta}.}
 }
 \value{
 An object of class \link[arules:itemsets]{arules::itemsets} or \link[arules:rules]{arules::rules}, depending
 on the \code{rules} parameter. Estimated precision is stored in the quality slot.
 }
 \description{
-Calls the Java implementation of the depth-first search algorithm described
-in the paper cited below to mine NB-frequent itemsets or NB-precise rules.
+Mines NB-frequent itemsets or NB-precise rules.
 }
 \details{
-The parameters can be estimated from the data using
-\code{NBMinerParameters}.
+Mines NB-frequent itemsets or NB-precise rules (Hahsler, 2006) are non-spurious
+patterns that occur significantly more often in the data than
+one would expect if the items were independent.
+Under independence, we model each item's frequency as a Poisson count
+with an item specific rate, and models variation in those
+rates with a Gamma distribution. Mixing the Poisson counts over the Gamma
+rates gives a negative binomial distribution. This flexible baseline
+captures the skewed frequency distributions common in transaction data:
+a few items occur often, while many occur rarely.
+The model parameters for the independence model can be estimated from the data
+using \code{\link[=NBMinerParameters]{NBMinerParameters()}}.
+
+NBMiner considers for an itemset adding each possible other item.
+Given the independent baseline it predicts how many extensions would reach
+each frequency by chance. The \code{pi} parameter sets the minimum predicted
+precision for accepting extensions. Here, precision means the predicted
+proportion of accepted extensions that are true associations under the model.
+Only extensions with a precision of at least \code{pi} are accepted.
+
+The \code{theta} parameter controls pruning during search. For a larger itemset,
+it sets the required fraction of its immediate subsets that must support the
+itemset as an NB-frequent pattern. A value of 1 is most restrictive requiring
+all subsets also to be NB-frequent;
+0 relaxes this condition. The intermediate default value 0.5 balances
+pruning with the chance of retaining associations whose items have
+different frequencies.
+
+\code{maxlen} limits the longest itemset considered, and \code{minlen} can set a
+minimum length for returned patterns.
+
+The mining algorithm uses a depth-first search implemented in Java.
+
+Details can be found in Hahsler (2006).
 }
 \examples{
 data("Agrawal")
 
-## mine
-param <- NBMinerParameters(Agrawal.db, pi = 0.99, theta = 0.5, maxlen = 5,
-    minlen=1, trim = 0, verbose = TRUE, plot = TRUE)
-itemsets_NB <- NBMiner(Agrawal.db, parameter = param,
-    control = list(verbose = TRUE, debug = FALSE))
+# Estimate independence model parameters
+param <- NBMinerParameters(Agrawal.db, trim = 0)
+
+# Mine non-spurious patterns
+itemsets_NB <- NBMiner(Agrawal.db,
+                       parameter = param,
+                       pi = 0.99,
+                       theta = 0.5,
+                       minlen = 2L)
 
 inspect(head(itemsets_NB))
 
-## remove patterns of length 1 (noise)
-i_NB <- itemsets_NB[size(itemsets_NB) > 1]
-patterns <- Agrawal.pat[size(Agrawal.pat) > 1]
+# Compare with the known patterns used to generate the data
+num_correct <- function(itemsets, patterns)
+    table(factor(rowSums(is.subset(itemsets, patterns)) > 0,
+          c(FALSE, TRUE)))
 
-## how many found itemsets are subsets of the patterns used in the db?
-table(rowSums(is.subset(i_NB,patterns)) > 0)
+# How many found itemsets are subsets of the patterns used in the db?
+num_correct(itemsets_NB, Agrawal.pat)
 
-## compare with the same number of the most frequent itemsets
-itemsets_supp <-  eclat(Agrawal.db, parameter = list(supp = 0.001))
-i_supp <- itemsets_supp[size(itemsets_supp) > 1]
-i_supp <- head(sort(i_supp, by = "support"), length(i_NB))
-table(rowSums(is.subset(i_supp, patterns)) > 0)
+# Compare with the same number of the most frequent itemsets
+itemsets_supp <-  eclat(Agrawal.db, parameter = list(supp = 0.001, minlen = 2))
+itemsets_supp <- head(sort(itemsets_supp, by = "support"), length(itemsets_NB))
+num_correct(itemsets_supp, Agrawal.pat)
 
-## mine NB-precise rules
-param <- NBMinerParameters(Agrawal.db, pi = 0.99, theta = 0.5, maxlen = 5,
-    rules = TRUE, minlen = 1, trim = 0)
-rules_NB <- NBMiner(Agrawal.db, parameter = param,
-    control = list(verbose = TRUE, debug = FALSE))
+# we see that NBMiner is much more effective to recover the true patterns.
+
+
+# Mine NB-precise rules
+rules_NB <- NBMiner(Agrawal.db,
+                    parameter = param,
+                    pi = 0.99,
+                    theta = 0.5,
+                    rules = TRUE)
+rules_NB
 
 inspect(head(rules_NB))
-
 }
 \references{
 Michael Hahsler. A model-based frequency constraint for mining

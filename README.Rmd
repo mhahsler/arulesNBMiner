@@ -9,7 +9,7 @@ source("https://raw.githubusercontent.com/mhahsler/pkg_helpers/main/pkg_helpers.
 pkg_title(pkg)
 ```
 
-This R package extends [arules](https://github.com/mhahsler/arules) with
+This R package extends [arules](https://michael.hahsler.net/arules) with
 NBMiner, an implementation of the model-based mining algorithm for
 NB-frequent itemsets described in Michael Hahsler's paper, ["A model-based
 frequency constraint for mining associations from transaction
@@ -17,8 +17,9 @@ data."](https://dx.doi.org/10.1007/s10618-005-0026-2) _Data Mining and
 Knowledge Discovery,_ 13(2):137-166, September 2006.
 
 This algorithm dynamically chooses support for itemsets based on the deviation 
-from an independence model. The package also supports mining NB-precise rules.
-
+from a fitted independence model. NBMiner is better at suppressing spurious 
+patters and finds interesting patterns with lower support compared to the traditional
+minimum support-based algorithms.
 
 ```{r echo=FALSE, results = 'asis'}
 pkg_install(pkg)
@@ -26,29 +27,36 @@ pkg_install(pkg)
 
 ## Usage
 
-Estimate negative binomial distribution (NBD) model parameters for the
-Agrawal data set.
+Estimate negative binomial distribution (NBD) model parameters for the arules Groceries data set.
 ```{r NB_estimation}
 library("arulesNBMiner")
-data("Agrawal")
+data("Groceries")
 
-param <- NBMinerParameters(Agrawal.db, pi = 0.99, theta = 0.5, 
-                           maxlen = 5, minlen = 1, trim = 0, 
-                           verbose = TRUE, plot = TRUE) 
+param <- NBMinerParameters(Groceries, trim = 0.1) 
 ```
+Note that the model shows independence but the dataset contains a significant amount
+of correlated items shown by the larger cumulative frequency.
 
 
 Mine NB-frequent itemsets
 ```{r}
-itemsets_NB <- NBMiner(Agrawal.db, parameter = param, 
-     control = list(verbose = TRUE, debug = FALSE))
+itemsets_NB <- NBMiner(Groceries, parameter = param, minlen = 2L)
+itemsets_NB
 ```
 
-Inspect some itemsets with the highest precision.
+Add support and inspect some NB-frequent itemsets with the highest precision.
 
 ```{r}
+quality(itemsets_NB) <- cbind(quality(itemsets_NB), 
+                              support = interestMeasure(itemsets_NB, "support",
+                                                        transactions = Groceries))
+
 inspect(head(itemsets_NB, by = "precision"))
 ```
+
+A precision close to 1 means that there is very little chance that 
+they are spurious. We see that some very low support itemsets are under the 
+top NB-frequent itemsets.
 
 
 ## References

@@ -19,6 +19,7 @@
 #' International Conference on Very Large Data Bases, VLDB}, pages 487-499,
 #' Santiago, Chile.
 #' @keywords datasets
+#' @seealso [arules::random.transactions()]
 #' @examples
 #' data(Agrawal)
 #'

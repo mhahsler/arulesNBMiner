@@ -11,14 +11,30 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
-`arulesNBMiner` extends the `arules` package with NBMiner, which mines
-negative-binomial (NB) frequent itemsets and NB-precise association rules.
+Association rule mining using the support-confidence framework is plagued 
+by the issue that it produces a large amount of spurious frequent itemsets
+and rules while still ignoring patterns that are below the set minimum support
+threshold. 
+
+This issue is addressed by `arulesNBMiner`, which extends the 
+`arules` package with the NBMiner algorithm to mine NB-frequent itemsets 
+and NB-precise association rules. The algorithm uses a model-based frequency 
+constraint as an alternative to a single, user-specified minimum support. 
+The constraint utilizes knowledge of the process generating transaction data 
+by applying a simple stochastic mixture model (the NB model) which allows 
+for transaction data's typically highly skewed item frequency distribution. 
+
+A user-specified precision threshold is used together with the model to find 
+local frequency thresholds for groups of itemsets. Based on the constraint we 
+develop the notion of NB-frequent itemsets and adapt a mining algorithm to 
+find all NB-frequent itemsets in a database. Experiments in Hahsler (2006)
+show that the new constraint provides improvements over a single minimum 
+support threshold and that the precision threshold is more robust and easier 
+to set and interpret by the user.
+
 This vignette demonstrates the workflow with the package's bundled Agrawal
-transactions. NBMiner uses a model-based frequency constraint described by
-Hahsler (2006). A single minimum-support threshold can miss associations
-involving infrequent items and tends to favor short itemsets. The model-based
-constraint adapts its frequency threshold to each itemset extension, using an
-estimated baseline for how often independent items would co-occur.
+transactions This dataset is artificially created from a known set of patterns, 
+which we will use to evaluate how well the algorithm is able to recover them.  
 
 ## Load the data
 
@@ -28,13 +44,22 @@ object, the input format used by `arulesNBMiner`.
 ```{r data}
 library(arulesNBMiner)
 data("Agrawal")
-summary(Agrawal.db)
+Agrawal.db
+```
+
+The dataset was created using 2000 patterns (itemsets) as described in 
+`Agrawal.db`. Patterns are mixed and corrupted to create the transactions.
+
+```{r patterns}
+Agrawal.pat
 ```
 
 ## Fit the baseline model
 
-The paper models each item's frequency as a Poisson count with an item
-specific rate, and models variation in those rates with a Gamma distribution.
+NBMiner uses a stochastic baseline model for independent items.
+Each item's frequency is modeled as a Poisson count with an item
+specific rate. The variation in those rates over items is modeled by a 
+Gamma distribution.
 Mixing the Poisson counts over the Gamma rates gives a negative binomial
 distribution. This flexible baseline captures the skewed frequency
 distributions common in transaction data: a few items occur often, while many
@@ -45,86 +70,154 @@ Items that never occur are absent from the transactions, so the estimator
 uses an expectation-maximization procedure to estimate the unobserved zero
 frequency class. The `trim` argument can exclude the most frequent items when
 they are outliers that would distort the fit. Inspect the diagnostic plot
-before choosing a nonzero trim value.
+before choosing a nonzero trim value. 
+A suitable trim percentage can be found by visual comparison of the empirical
+data and the estimated model or by minimizing the
+$\chi^2$-value of the goodness-of-fit test reported during the fit procedure.
+
 
 ```{r parameters}
-param <- NBMinerParameters(Agrawal.db, 
-                           pi = 0.99, 
-                           theta = 0.5, 
-                           maxlen = 5, 
-                           minlen = 1,
-                           trim = 0, 
-                           verbose = TRUE, 
-                           plot = TRUE)
-
+param <- NBMinerParameters(Agrawal.db, trim = 0)
 param
 ```
 
-The figure compares the observed cumulative item frequencies with frequencies
-expected under the fitted baseline. The `a` estimate is scaled per incidence
-for NBMiner, as described in the paper.
-
+The diagnostic plot compares the observed data with the model.
+The plot shows the number of items with a frequency larger than \eqn{r}.
+The fitted distribution is characterized by the two parameters of 
+the negative-binomial distribution, the scaling parameter $a$ and the 
+shape parameter $k$.
 
 ## Mine NB-frequent itemsets
 
-For an itemset already found, NBMiner considers adding each possible item. It
-fits the baseline to the transactions containing that itemset and predicts
-how many extensions would reach each frequency by chance. The `pi` parameter
-sets the minimum predicted precision for accepting extensions. Here,
-precision means the predicted proportion of accepted extensions that are
-true associations under the model; it is not a guarantee of the actual
-precision for every data set.
+The NB distribution provides for an itemset $l$ a baseline for the support
+distribution of the candidate 1-extension itemsets $l \cup \{c\}$ under 
+independence.
+If in the database some item candidates $c$ are related to the items in $l$,
+then $l \cup \{c\}$ will have a higher
+frequency in the data than expected by the baseline model.
+Finding non-random 1-extensions of $l$ (extensions with item candidates with a too
+high co-occurrence frequency), is the same as identifying a frequency threshold
+$\sigma_l$, where accepting
+item candidates with a frequency count $r \ge \sigma_l$
+separates associated items best from items
+which co-occur often by pure chance. 
+We use a threshold on precision $\pi$, the proportion of
+correctly predicted positive cases in all predicted positive cases
+to determine $\sigma_l$ and accept all 1-extensions $l \cup \{c\}$
+if 
 
-The `theta` parameter controls search pruning. For a larger itemset, it sets
-the required fraction of its immediate subsets that must support the itemset
-as an NB-frequent pattern. A value of 1 is most restrictive; 0 relaxes this
-condition. The intermediate value 0.5 used here balances pruning with the
-chance of retaining associations whose items have different frequencies.
-`maxlen` limits the longest itemset considered, and `minlen` can set a
-minimum length for returned patterns. The `control` list accepts `verbose`
-and `debug` logical options. 
+$$supp(l \cup \{c\}) ≥ \sigma_l$$.
 
-Results include model-estimated precision in
-the `precision` quality column. For comparison, we add the support measure.
+This means that the single user-specified precision threshold $\pi$
+leads to different support thresholds $\sigma_l$, one for all 1-extensions
+of itemset $l$.
+
+The `pi` parameter sets the minimum predicted
+precision for accepting 1-extensions. 
+
+The `theta` parameter controls pruning during search. For a larger itemset,
+it sets the required fraction of its immediate subsets that must support the
+itemset as an NB-frequent pattern. A value of 1 is most restrictive requiring
+all subsets also to be NB-frequent;
+0 relaxes this condition. The intermediate default value 0.5 balances
+pruning with the chance of retaining associations whose items have
+different frequencies.
 
 
 ```{r itemsets}
-itemsets <- NBMiner(
-  Agrawal.db,
-  parameter = param,
-  control = list(verbose = FALSE, debug = FALSE)
-)
-
-quality(itemsets) <- cbind(quality(itemsets),
-                           support = interestMeasure(itemsets, "support", 
-                                           transactions = Agrawal.db))
-
-inspect(head(sort(itemsets, by = "support"), n = 10))
+itemsets_NB <- NBMiner(Agrawal.db, 
+                       pi = 0.99,
+                       parameter = param, 
+                       minlen = 2L)
+itemsets_NB
 ```
+
+```{r itemsets2}
+inspect(head(itemsets_NB, by = "precision"))
+```
+
+## NB-frequent vs. frequent itemsets?
+
+How many found itemsets are non-spurious, meaning that they are 
+consistent with the known patterns used to generate the data?
+This can be answered by looking of how many found patterns contain only 
+items which are subsets of the items in the patterns.
+
+```{r correct_patters}
+num_correct <- function(itemsets, patterns)
+    table(factor(rowSums(is.subset(itemsets, patterns)) > 0,
+          c(FALSE, TRUE)))
+
+num_correct(itemsets_NB, Agrawal.pat)
+```
+
+Now compare this with the non-spurious patterns found by regular frequent 
+itemset mining. We use here the Apriori algorithm and select the same number of 
+itemsets with the highest support. 
+
+```{r correct_patterns_eclat}
+itemsets_supp <-  apriori(Agrawal.db, 
+                          support = 0.001, 
+                          target = "frequent", 
+                          minlen = 2,
+                          control = list(verbose = FALSE))
+itemsets_supp <- head(sort(itemsets_supp, by = "support"), length(itemsets_NB))
+itemsets_supp
+
+num_correct(itemsets_supp, Agrawal.pat)
+```
+
+NB-frequent itemsets are much better at finding non-spurious itemsets.
+Since NBMiner sets individual support thresholds for itemsets, 
+it is also able to accept less frequent itemsets which are removed by the 
+strict minimum support used for regular frequent itemsets. 
+
+```{r}
+support_dist <- data.frame("NB-frequent" = support(itemsets_NB, transactions = Agrawal.db), 
+                 "frequent" = support(itemsets_supp, transactions = Agrawal.db))
+
+boxplot(support_dist, horizontal = TRUE)
+```
+
+NB-frequent itemsets are useful when it is important to find itemsets with low 
+support and when suppressing spurious itemsets is important.
 
 ## Mine NB-precise rules
 
-NB-precise rules are rules created from NB-frequent itemsets. 
-Rules instead of itemsets can be mined by changing the parameter element `rules` 
-to `TRUE`.
+Hahsler (2006) shows an important connection between 1-extensions and 
+association rules: 
+
+$$supp(l \cup \{c\}) \ge \sigma_l \iff conf(l \rightarrow c) \ge \gamma_l$$
+This means choosing $\sigma_l$ on 1-extensions is equivalent to choosing a
+confidence threshold $\gamma_l$ for all rules starting with $l$. We call these 
+rules NB-precise rules since the individual confidence thresholds are chosen 
+using a user-specified precision threshold $\pi$.
+
+NB-precise rules are rules created by NBMiner with the parameter `rules = TRUE`. 
 
 For comparison, we add the standard measures support, confidence, and lift.
 
 ```{r rules}
-param@rules <- TRUE
+rules <- NBMiner(Agrawal.db, 
+                 parameter = param,
+                 pi = 0.99,
+                 rules = TRUE)
+rules
+```
 
-rules <- NBMiner(Agrawal.db, parameter = param)
-
+```{r add_interest_measures}
 quality(rules) <- cbind(quality(rules),
-                           interestMeasure(rules, c("support", "confidence", "lift"), 
-                                           transactions = Agrawal.db))
+                        interestMeasure(rules, 
+                                        c("support", "confidence", "lift"), 
+                                        transactions = Agrawal.db))
 
 inspect(head(sort(rules, by = "precision"), n = 10))
 ```
 
-The rules are very unlikely to random noise in the data.
-
-
+Rules found with a precision close to 1 are very unlikely to be spurious. 
+Bu comparing the rules to standard association rule interest measures, 
+we see that these some rules have significantly smaller support but all 
+have very large lift values.
 
 ## References
 
