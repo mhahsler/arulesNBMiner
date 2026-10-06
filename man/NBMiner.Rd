@@ -9,7 +9,7 @@
 NBMiner(data, parameter, control = NULL, ...)
 }
 \arguments{
-\item{data}{object of class \link[arules:transactions]{arules::transactions}.}
+\item{data}{object of class \code{\link[arules:transactions]{arules::transactions}}.}
 
 \item{parameter}{an \code{NBMinerParameter} object or a named list of its
 parameters. Use \code{\link[=NBMinerParameters]{NBMinerParameters()}} to estimate the model parameters.}
@@ -22,7 +22,7 @@ and diagnostic output.}
 For example, use \code{rules = TRUE} to mine rules or change \code{pi} or \code{theta}.}
 }
 \value{
-An object of class \link[arules:itemsets]{arules::itemsets} or \link[arules:rules]{arules::rules}, depending
+An object of class \code{\link[arules:itemsets]{arules::itemsets}} or \code{\link[arules:rules]{arules::rules}}, depending
 on the \code{rules} parameter. Estimated precision is stored in the quality slot.
 }
 \description{
@@ -107,7 +107,7 @@ inspect(head(rules_NB))
 \references{
 Michael Hahsler. A model-based frequency constraint for mining
 associations from transaction data. \emph{Data Mining and Knowledge
-Discovery, 13(2):137-166,} September 2006.
+Discovery}, 13(2):137-166, September 2006.
 \doi{10.1007/s10618-005-0026-2}
 }
 \keyword{models}

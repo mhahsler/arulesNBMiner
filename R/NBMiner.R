@@ -37,7 +37,7 @@
 #' Details can be found in Hahsler (2006).
 #'
 #' @aliases NBMiner NBMinerControl-class NBMinerParameter-class
-#' @param data object of class [arules::transactions].
+#' @param data object of class [`arules::transactions`].
 #' @param parameter an `NBMinerParameter` object or a named list of its
 #'   parameters. Use [NBMinerParameters()] to estimate the model parameters.
 #' @param control an `NBMinerControl` object or a named list of control
@@ -45,11 +45,11 @@
 #'   and diagnostic output.
 #' @param ... named parameter overrides applied to `parameter` before mining.
 #'   For example, use `rules = TRUE` to mine rules or change `pi` or `theta`.
-#' @return An object of class [arules::itemsets] or [arules::rules], depending
+#' @return An object of class [`arules::itemsets`] or [`arules::rules`], depending
 #' on the `rules` parameter. Estimated precision is stored in the quality slot.
 #' @references Michael Hahsler. A model-based frequency constraint for mining
-#' associations from transaction data. \emph{Data Mining and Knowledge
-#' Discovery, 13(2):137-166,} September 2006.
+#' associations from transaction data. _Data Mining and Knowledge
+#' Discovery_, 13(2):137-166, September 2006.
 #' \doi{10.1007/s10618-005-0026-2}
 #' @keywords models
 #' @examples

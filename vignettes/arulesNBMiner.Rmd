@@ -39,7 +39,7 @@ which we will use to evaluate how well the algorithm is able to recover them.
 ## Load the data
 
 Load the package and its example data. `Agrawal.db` is a `transactions`
-object, the input format used by `arulesNBMiner`.
+object, the input format used by `NBMiner()`.
 
 ```{r data}
 library(arulesNBMiner)

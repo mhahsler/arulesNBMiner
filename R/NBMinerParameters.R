@@ -22,7 +22,7 @@
 #' suitable percentage of the items with the highest frequencies.
 #' A suitable percentage can be found by visual comparison of the empirical
 #' data and the estimated model or by minimizing the
-#' \eqn{\Chi^2}{Chi-squared}-value of the goodness-of-fit test which is
+#' \eqn{\chi^2}{Chi-squared}-value of the goodness-of-fit test which is
 #' reported when run with `verbose = TRUE`. A diagnostic plot
 #' comparing the observed data with the model is shown with `plot = TRUE`.
 #' The plot shows the number of items with a frequency larger than \eqn{r}.
@@ -37,7 +37,7 @@
 #' change the number of bins used in the goodness-of-fit test. The other
 #' parameters are stored in the parameter object for use by [NBMiner()].
 #'
-#' @param data the data as an object of class [arules::transactions].
+#' @param data the data as an object of class [`arules::transactions`].
 #' @param trim fraction of the most frequent items to exclude when fitting the
 #'   baseline model.
 #' @param pi minimum predicted precision required to accept an itemset

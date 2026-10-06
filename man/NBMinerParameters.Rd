@@ -19,7 +19,7 @@ NBMinerParameters(
 )
 }
 \arguments{
-\item{data}{the data as an object of class \link[arules:transactions]{arules::transactions}.}
+\item{data}{the data as an object of class \code{\link[arules:transactions]{arules::transactions}}.}
 
 \item{trim}{fraction of the most frequent items to exclude when fitting the
 baseline model.}
@@ -75,7 +75,7 @@ high frequencies. For a more robust estimate, we can trim a
 suitable percentage of the items with the highest frequencies.
 A suitable percentage can be found by visual comparison of the empirical
 data and the estimated model or by minimizing the
-\eqn{\Chi^2}{Chi-squared}-value of the goodness-of-fit test which is
+\eqn{\chi^2}{Chi-squared}-value of the goodness-of-fit test which is
 reported when run with \code{verbose = TRUE}. A diagnostic plot
 comparing the observed data with the model is shown with \code{plot = TRUE}.
 The plot shows the number of items with a frequency larger than \eqn{r}.

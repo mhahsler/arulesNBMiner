@@ -1,4 +1,4 @@
-# arulesNBMiner 0.1.10 (unpublished)
+# arulesNBMiner 0.1.10 (10/06/2026)
 
 ## Changes
 * Added support for passing parameter overrides directly to `NBMiner()`.
