@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/mhahsler/arulesNBMiner/blob/master/inst/CITATION)
+[`inst/CITATION`](https://github.com/mhahsler/arulesNBMiner/blob/arulesNBMiner_0.1.10/inst/CITATION)
 
 Hahsler M (2026). *arulesNBMiner: Mining NB-Frequent Itemsets and
 NB-Precise Rules*. R package version 0.1.10,
